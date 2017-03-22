@@ -28,7 +28,11 @@
     <!--     Fonts and icons     -->
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="assets/css/flatpickr.css">
 
+    <script src="assets/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+    <script src="assets/js/vue-2.1.10.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="assets/js/jquery.twbsPagination.min.js"></script>
 </head>
 <body>
 
@@ -36,7 +40,7 @@
     <div class="sidebar" data-color="blue" data-image="assets/img/sidebar-4.jpg">
     	<div class="sidebar-wrapper">
             <div class="logo">
-                <a href="http://www.creative-tim.com" class="simple-text">
+                <a href="" class="simple-text">
                     管理后台
                 </a>
             </div>
@@ -44,7 +48,7 @@
             <ul class="nav">
                 <li class="active">
                     <a href="index.html">
-                        <i class="pe-7s-graph"></i>
+                        <i class="pe-7s-home"></i>
                         <p>首页</p>
                     </a>
                 </li>
@@ -55,20 +59,20 @@
                     </a>
                 </li>
                 <li>
-                    <a href="user.html">
+                    <a href="service.html">
                         <i class="pe-7s-note2"></i>
                         <p>服务类型</p>
                     </a>
                 </li>
                 <li>
-                    <a href="typography.html">
-                        <i class="pe-7s-news-paper"></i>
+                    <a href="static.html">
+                        <i class="pe-7s-graph"></i>
                         <p>数据统计</p>
                     </a>
                 </li>
                 <li class="active-pro">
                     <a href="upgrade.html">
-                        <i class="pe-7s-rocket"></i>
+                        <i class="pe-7s-power"></i>
                         <p>退出</p>
                     </a>
                 </li>
@@ -80,19 +84,19 @@
         <nav class="navbar navbar-default navbar-fixed">
             <div class="container-fluid">
                 <div class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav navbar-left">
+                    <ul class="nav navbar-nav navbar-left" id="task">
                         <li>
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="">审核认证</i>
+                            <a href="warning.html" class="dropdown-toggle">
+                                <i>审核认证</i>
                                 <b class="caret"></b>
-                                <span class="notification">5</span>
+                                <span class="notification">{{approval}}</span>
                             </a>
                         </li>
                         <li class="dropdown">
-                              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="">到期预警</i>
+                              <a href="warning.html" class="dropdown-toggle">
+                                    <i>到期预警</i>
                                     <b class="caret"></b>
-                                    <span class="notification">5</span>
+                                    <span class="notification">{{expired}}</span>
                               </a>
                         </li>
                     </ul>
@@ -112,47 +116,18 @@
         <div class="content">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <div class="card">
-                            <div class="header">
-                                <h4 class="title">用户分布</h4>
-                                <p class="category">商家与客户汇总</p>
-                            </div>
                             <div class="content">
-                                <div id="chartPreferences" class="ct-chart ct-perfect-fourth"></div>
-
-                                <div class="footer">
-                                    <div class="legend">
-                                        <i class="fa fa-circle text-info"></i> 商家
-                                        <i class="fa fa-circle text-danger"></i> 客户
-                                    </div>
-                                    <hr>
-                                    <div class="stats">
-                                        <i class="fa fa-clock-o"></i> Campaign sent 2 days ago
-                                    </div>
-                                </div>
+                                <div id="chartPreferences" class="ct-perfect-fourth"></div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-md-8">
+                    <div class="col-md-7">
                         <div class="card">
-                            <div class="header">
-                                <h4 class="title">用户增长</h4>
-                                <p class="category">最近一周用户增长情况</p>
-                            </div>
                             <div class="content">
                                 <div id="chartHours" class="ct-chart"></div>
-                                <div class="footer">
-                                    <div class="legend">
-                                        <i class="fa fa-circle text-info"></i> 商家
-                                        <i class="fa fa-circle text-danger"></i> 用户
-                                    </div>
-                                    <hr>
-                                    <div class="stats">
-                                        <i class="fa fa-history"></i> Updated 3 minutes ago
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -168,107 +143,26 @@
                             </div>
                             <div class="content">
                                 <div class="table-full-width">
-                                    <table class="table">
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <label class="checkbox">
-                                                        <input type="checkbox" value="" data-toggle="checkbox">
-                                                    </label>
-                                                </td>
-                                                <td>【新店申请】衣保姆</td>
-                                                <td class="td-actions text-right">
-                                                    <button type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-xs">
-                                                        <i class="fa fa-edit"></i>
-                                                    </button>
-                                                    <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs">
-                                                        <i class="fa fa-times"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <label class="checkbox">
-                                                        <input type="checkbox" value="" data-toggle="checkbox" checked="">
-                                                    </label>
-                                                </td>
-                                                <td>【店铺信息修改】邦家博士</td>
-                                                <td class="td-actions text-right">
-                                                    <button type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-xs">
-                                                        <i class="fa fa-edit"></i>
-                                                    </button>
-                                                    <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs">
-                                                        <i class="fa fa-times"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <label class="checkbox">
-                                                        <input type="checkbox" value="" data-toggle="checkbox" checked="">
-                                                    </label>
-                                                </td>
-                                                <td>Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit
-</td>
-                                                <td class="td-actions text-right">
-                                                    <button type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-xs">
-                                                        <i class="fa fa-edit"></i>
-                                                    </button>
-                                                    <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs">
-                                                        <i class="fa fa-times"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <label class="checkbox">
-                                                        <input type="checkbox" value="" data-toggle="checkbox">
-                                                    </label>
-                                                </td>
-                                                <td>Create 4 Invisible User Experiences you Never Knew About</td>
-                                                <td class="td-actions text-right">
-                                                    <button type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-xs">
-                                                        <i class="fa fa-edit"></i>
-                                                    </button>
-                                                    <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs">
-                                                        <i class="fa fa-times"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <label class="checkbox">
-                                                        <input type="checkbox" value="" data-toggle="checkbox">
-                                                    </label>
-                                                </td>
-                                                <td>Read "Following makes Medium better"</td>
-                                                <td class="td-actions text-right">
-                                                    <button type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-xs">
-                                                        <i class="fa fa-edit"></i>
-                                                    </button>
-                                                    <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs">
-                                                        <i class="fa fa-times"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <label class="checkbox">
-                                                        <input type="checkbox" value="" data-toggle="checkbox">
-                                                    </label>
-                                                </td>
-                                                <td>Unfollow 5 enemies from twitter</td>
-                                                <td class="td-actions text-right">
-                                                    <button type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-xs">
-                                                        <i class="fa fa-edit"></i>
-                                                    </button>
-                                                    <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs">
-                                                        <i class="fa fa-times"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
+                                    <table class="table" id="approval">
+                                        <tbody v-for="approval in approvals">
+                                            <td v-if="approval.type == 'None'">【未分类信息】{{approval.name}}</td>
+                                            <td v-if="approval.type == 'Modify'">【店铺信息修改】{{approval.name}}</td>
+                                            <td v-if="approval.type == 'Apply'">【新店申请】{{approval.name}}</td>
+                                            <td class="td-actions text-right">
+                                                <button type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-xs">
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
+                                                <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs">
+                                                    <i class="fa fa-times"></i>
+                                                </button>
+                                            </td>
                                         </tbody>
                                     </table>
+                                    <div class="container">
+                                        <nav aria-label="Page navigation">
+                                            <ul class="pagination" id="pagination"></ul>
+                                        </nav>
+                                    </div>
                                 </div>
 
                                 <div class="footer">
@@ -283,40 +177,6 @@
                 </div>
             </div>
         </div>
-
-
-        <footer class="footer">
-            <div class="container-fluid">
-                <nav class="pull-left">
-                    <ul>
-                        <li>
-                            <a href="#">
-                                Home
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                Company
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                Portfolio
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                               Blog
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-                <p class="copyright pull-right">
-                    &copy; 2016 <a href="http://www.creative-tim.com">Creative Tim</a>, made with love for a better web
-                </p>
-            </div>
-        </footer>
-
     </div>
 </div>
 
@@ -324,42 +184,253 @@
 </body>
 
     <!--   Core JS Files   -->
-    <script src="assets/js/jquery-1.10.2.js" type="text/javascript"></script>
 	<script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
 
 	<!--  Checkbox, Radio & Switch Plugins -->
-	<script src="assets/js/bootstrap-checkbox-radio-switch.js"></script>
+	<script src="assets/js/bootstrap-checkbox-radio-switch.js" type="text/javascript"></script>
 
 	<!--  Charts Plugin -->
-	<script src="assets/js/chartist.min.js"></script>
+	<script src="assets/js/echarts.common.min.js" type="text/javascript"></script>
 
     <!--  Notifications Plugin    -->
-    <script src="assets/js/bootstrap-notify.js"></script>
-
-    <!--  Google Maps Plugin    -->
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+    <script src="assets/js/bootstrap-notify.js" type="text/javascript"></script>
 
     <!-- Light Bootstrap Table Core javascript and methods for Demo purpose -->
-	<script src="assets/js/light-bootstrap-dashboard.js"></script>
-
+	<script src="assets/js/light-bootstrap-dashboard.js" type="text/javascript"></script>
 	<!-- Light Bootstrap Table DEMO methods, don't include it in your project! -->
-	<script src="assets/js/demo.js"></script>
+    
+    <script type="text/javascript" src="assets/js/flatpickr.js"></script>
+
 
 	<script type="text/javascript">
-    	$(document).ready(function(){
-
-        	demo.initChartist();
-
-        	$.notify({
-            	icon: 'pe-7s-gift',
-            	message: "Welcome to <b>Light Bootstrap Dashboard</b> - a beautiful freebie for every web developer."
-
-            },{
-                type: 'info',
-                timer: 4000
+        $(function () {
+            window.pagObj = $('#pagination').twbsPagination({
+                totalPages: 35,
+                visiblePages: 5,
+                onPageClick: function (event, page) {
+                    console.info(page + ' (from options)');
+                }
+            }).on('page', function (event, page) {
+                console.info(page + ' (from event listening)');
             });
+        });
 
-    	});
+    //     // 初始化加载信息数据
+    //     function initUserlogData() {  
+    //     //重置分页组件否则保留上次查询的，一般来说很多问题出现与这三行代码有关如：虽然数据正确但是页码不对仍然为上一次查询出的一致
+    //     $('#pagination-log').empty();    
+    //     $('#pagination-log').removeData("twbs-pagination");    
+    //     $('#pagination-log').unbind("page");    
+    //       //将页面的数据容器制空    
+    //     $("#messagebody").empty();    
+    //       //设置默认当前页 
+    //     var pagenow = 1;       
+    //       //设置默认总页数    
+    //     var totalPage = 1;    
+    //       //设置默认可见页数    
+    //     var visiblecount = 5;   
+    //       //加载后台数据页面  
+    //     function loaddata() {       
+    //         $.ajax({
+    //             url : "",
+    //             type : "post",          
+    //             data : {                
+    //                 "currentpage" : pagenow         
+    //             },          
+    //             dataType : "json",          
+    //             success : function(data) {              
+    //                 var htmlobj = "";               
+    //                 totalPage = data.page.totalPage;           
+    //                 //后台总页数与可见页数比较如果小于可见页数则可见页数设置为总页数
+    //                 if (totalPage < visiblecount) {                 
+    //                     visiblecount = totalPage;               
+    //                 };
+    //                 $('#pagination-log').twbsPagination({                   
+    //                     totalPages : totalPage,                 
+    //                     visiblePages : visiblecount,                    
+    //                     version : '1.1',         
+    //                     //页面点击时触发事件                 
+    //                     onPageClick : function(event, page) {                       
+    //                         // 将当前页数重置为page                     
+    //                         pagenow = page                      
+    //                         //调用后台获取数据函数加载点击的页码数据  
+    //                         loaddata();                 
+    //                     }               
+    //                 });
+    //             },
+    //             error : function(e) {
+    //                 alert("s数据访问失败");
+    //             }
+    //         }); 
+    //     }   
+    //     //函数初始化是调用内部函数  
+    //     loaddata();
+    // };
+      	//数据
+    var amount={"visitor":100,"vendor":12};
+    var action=[{"visitor":0,"vendor":2,"action":"20170306"},
+                {"visitor":0,"vendor":0,"action":"20170307"},
+                {"visitor":0,"vendor":0,"action":"20170308"},
+                {"visitor":0,"vendor":0,"action":"20170309"},
+                {"visitor":0,"vendor":0,"action":"20170310"},
+                {"visitor":1,"vendor":3,"action":"20170311"},
+                {"visitor":0,"vendor":0,"action":"20170312"},
+                {"visitor":0,"vendor":0,"action":"20170313"},
+                {"visitor":0,"vendor":1,"action":"20170314"},
+                {"visitor":0,"vendor":0,"action":"20170315"},
+                {"visitor":1,"vendor":4,"action":"20170316"},
+                {"visitor":0,"vendor":0,"action":"20170317"},
+                {"visitor":5,"vendor":0,"action":"20170318"},
+                {"visitor":0,"vendor":0,"action":"20170319"},
+                {"visitor":1,"vendor":3,"action":"20170320"}];
+
+    var taskAmount={"expired":15,"approval":12};
+    var taskapproval=[{"expired":"2017-03-17T06:38:18.867Z","last":"2017-03-17T06:38:18.867Z","hot":false,"code":68770816,"status":"None","type":"Modify","scope":null,"catgeory":"休闲","phone":null,"name":"3"},
+                {"expired":"2017-03-17T06:36:27.477Z","last":"2017-03-17T06:36:27.477Z","hot":false,"code":68769793,"status":"None","type":"Modify","scope":null,"catgeory":"旅游","phone":null,"name":"2"},
+                {"expired":"2017-03-17T06:36:11.367Z","last":"2017-03-17T06:36:11.367Z","hot":false,"code":68769792,"status":"None","type":"Modify","scope":null,"catgeory":"旅游","phone":null,"name":"2"},
+                {"expired":"2017-03-17T06:35:53.537Z","last":"2017-03-17T06:35:53.537Z","hot":false,"code":68769280,"status":"None","type":"Modify","scope":null,"catgeory":"旅游","phone":null,"name":"2"},
+                {"expired":"2017-03-17T06:33:25.740Z","last":"2017-03-17T06:33:25.740Z","hot":false,"code":68768256,"status":"None","type":"Modify","scope":null,"catgeory":"旅游","phone":null,"name":"2"},
+                {"expired":"2017-03-17T05:25:51.383Z","last":"2017-03-17T05:25:51.383Z","hot":false,"code":68733441,"status":"None","type":"Modify","scope":null,"catgeory":"其他","phone":null,"name":"5"},
+                {"expired":"2017-03-17T05:25:16.787Z","last":"2017-03-17T07:03:28.960Z","hot":false,"code":68733440,"status":"None","type":"Apply","scope":null,"catgeory":"休闲","phone":null,"name":"555555"},
+                {"expired":"2017-03-16T07:22:33.313Z","last":"2017-03-16T07:22:33.313Z","hot":false,"code":68056065,"status":"None","type":"Modify","scope":null,"catgeory":"酒店","phone":null,"name":"li"},
+                {"expired":"2017-03-16T07:22:09.3Z","last":"2017-03-16T07:22:09.3Z","hot":false,"code":68056064,"status":"None","type":"Modify","scope":null,"catgeory":"酒店","phone":null,"name":"li"},
+                {"expired":"1905-05-22T16:00:00Z","last":"2017-02-13T02:21:57.953Z","hot":false,"code":45046272,"status":"None","type":"None","scope":null,"catgeory":"快餐","phone":null,"name":"伊势丹"}];
+    var index={"PrevPage":-1,"NextPage":-1,"TotalPages":2,"TotalRecords":12,"PageSize":10,"PageIndex":0,"DataSource":
+    [{"expired":"2017-03-17T06:38:18.867Z","last":"2017-03-17T06:38:18.867Z","hot":false,"code":68770816,"status":"None","type":"Modify","scope":null,"catgeory":"休闲","phone":null,"name":"3"},
+    {"expired":"2017-03-17T06:36:27.477Z","last":"2017-03-17T06:36:27.477Z","hot":false,"code":68769793,"status":"None","type":"Modify","scope":null,"catgeory":"旅游","phone":null,"name":"2"},
+    {"expired":"2017-03-17T06:36:11.367Z","last":"2017-03-17T06:36:11.367Z","hot":false,"code":68769792,"status":"None","type":"Modify","scope":null,"catgeory":"旅游","phone":null,"name":"2"},
+    {"expired":"2017-03-17T06:35:53.537Z","last":"2017-03-17T06:35:53.537Z","hot":false,"code":68769280,"status":"None","type":"Modify","scope":null,"catgeory":"旅游","phone":null,"name":"2"},
+    {"expired":"2017-03-17T06:33:25.740Z","last":"2017-03-17T06:33:25.740Z","hot":false,"code":68768256,"status":"None","type":"Modify","scope":null,"catgeory":"旅游","phone":null,"name":"2"},
+    {"expired":"2017-03-17T05:25:51.383Z","last":"2017-03-17T05:25:51.383Z","hot":false,"code":68733441,"status":"None","type":"Modify","scope":null,"catgeory":"其他","phone":null,"name":"5"},
+    {"expired":"2017-03-17T05:25:16.787Z","last":"2017-03-17T07:03:28.960Z","hot":false,"code":68733440,"status":"None","type":"Apply","scope":null,"catgeory":"休闲","phone":null,"name":"555555"},
+    {"expired":"2017-03-16T07:22:33.313Z","last":"2017-03-16T07:22:33.313Z","hot":false,"code":68056065,"status":"None","type":"Modify","scope":null,"catgeory":"酒店","phone":null,"name":"li"},
+    {"expired":"2017-03-16T07:22:09.3Z","last":"2017-03-16T07:22:09.3Z","hot":false,"code":68056064,"status":"None","type":"Modify","scope":null,"catgeory":"酒店","phone":null,"name":"li"},
+    {"expired":"1905-05-22T16:00:00Z","last":"2017-02-13T02:21:57.953Z","hot":false,"code":45046272,"status":"None","type":"None","scope":null,"catgeory":"快餐","phone":null,"name":"伊势丹"}]}
+
+    //图形
+    var myChart = echarts.init(document.getElementById('chartPreferences'));
+        
+    // 填入数据
+    var option = {
+            title : {
+                text: '用户分布',
+                subtext: '商家与用户汇总',
+                x:'center'
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                data: ['商家','用户']
+            },
+            series : [
+                {
+                    name: '访问来源',
+                    type: 'pie',
+                    radius : '55%',
+                    center: ['50%', '60%'],
+                    data:[
+                        {value:amount.vendor, name:'商家'},
+                        {value:amount.visitor, name:'用户'}
+                    ],
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+    myChart.setOption(option);
+
+    //线形图
+    var myChart2 = echarts.init(document.getElementById('chartHours'));
+    var actions=[];
+    var vendors=[];
+    var visitors=[];
+    for (var i=0 ; i<action.length ; i++) {
+        vendors.push(action[i].vendor);
+        visitors.push(action[i].visitor);
+        actions.push(action[i].action);
+    };
+            var option2 = {
+                title: {
+                    text: '用户增长',
+                    subtext: '最近一周的用户增长情况',
+                },
+                tooltip : {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data:['商户','用户']
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis : [
+                    {
+                        type : 'category',
+                        boundaryGap : false,
+                        data : actions
+                    }
+                ],
+                yAxis : [
+                    {
+                        type : 'value'
+                    }
+                ],
+                series : [
+                    {
+                        name:'商户',
+                        type:'line',
+                        stack: '总量',
+                        areaStyle: {normal: {}},
+                        data:vendors
+                    },
+                    {
+                        name:'用户',
+                        type:'line',
+                        stack: '总量',
+                        areaStyle: {normal: {}},
+                        data:visitors
+                    }
+                ]
+            };
+    myChart2.setOption(option2);
+
+    //左上角预警数字
+    var task=new Vue({
+        el:'#task',
+        data:{
+            approval:taskAmount.approval,
+            expired:taskAmount.expired
+        }
+    });
+
+
+    var approval=new Vue({
+        el:'#approval',
+        data:{
+            approvals:taskapproval
+        }
+    })
+
+    //分页
+
+
 	</script>
 
 </html>

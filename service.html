@@ -1,0 +1,223 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<link rel="icon" type="image/png" href="assets/img/favicon.ico">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title>维修管理后台</title>
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="assets/css/animate.min.css" rel="stylesheet"/>
+    <link href="assets/css/light-bootstrap-dashboard.css" rel="stylesheet"/>
+    <link href="assets/css/demo.css" rel="stylesheet" />
+    <link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="sidebar" data-color="blue" data-image="assets/img/sidebar-5.jpg">
+    	<div class="sidebar-wrapper">
+            <div class="logo">
+                <a class="simple-text">
+                    管理后台
+                </a>
+            </div>
+
+            <ul class="nav">
+                <li>
+                    <a href="index.html">
+                        <i class="pe-7s-home"></i>
+                        <p>首页</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="table.html">
+                        <i class="pe-7s-user"></i>
+                        <p>商家</p>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="service.html">
+                        <i class="pe-7s-note2"></i>
+                        <p>服务类型</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="static.html">
+                        <i class="pe-7s-graph"></i>
+                        <p>数据统计</p>
+                    </a>
+                </li>
+                <li class="active-pro">
+                    <a href="login.html">
+                        <i class="pe-7s-power"></i>
+                        <p>退出</p>
+                    </a>
+                </li>
+            </ul>
+    	</div>
+    </div>
+
+    <div class="main-panel">
+        <nav class="navbar navbar-default navbar-fixed" style="background-color:#f8f8f8;border-bottom: none;">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-left">
+                        <li>
+                            
+                        </li>   
+                    </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                              
+                        </li>
+                        <li>
+                           
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="header">
+                                <div style='display:inline-block'>
+                                    <h4 class="title">服务类型</h4>
+                                    <p class="category">所有服务类型数据</p>
+                                </div>
+                            </div>
+                            <div class="content table-responsive table-full-width" id='data'>
+                                <table class="table table-hover table-striped" >
+                                    <thead>
+                                        <th class="col-md-3">一级分类</th>
+                                    	<th class="col-md-3">二级分类</th>
+                                    	<th>操作</th>
+                                    </thead>
+                                    <tbody v-for="items of list">
+                                        <tr v-if="items.tier == 1" >
+                                            <td>{{items.name}}</td>
+                                            <td></td>
+                                            <td>
+                                                <a v-bind:href="'create.html?code='+items.code+'&name='+items.urlName">新增分类</a>
+                                            </td>
+                                        </tr>
+                                        <tr v-if="items.tier == 2">
+                                            <td></td>
+                                            <td>
+                                                <a v-bind:href="'hot.html?name='+items.urlName+'&code='+items.code">{{items.name}}</a>
+                                            </td>
+                                            <td>
+                                                <a v-bind:href="'edit.html?code='+items.code+'&name='+items.name">编辑</a>
+                                                <a v-on:click="deleteItem(items.code)" href="javascript:void(0)">删除</a>
+                                            </td>
+                                        </tr>   
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+</body>
+
+    <!--   Core JS Files   -->
+    <script src="assets/js/jquery-1.10.2.js" type="text/javascript"></script>
+	<script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
+
+	<!--  Checkbox, Radio & Switch Plugins -->
+	<script src="assets/js/bootstrap-checkbox-radio-switch.js"></script>
+
+	<!--  Charts Plugin -->
+	<script src="assets/js/chartist.min.js"></script>
+
+    <!--  Notifications Plugin    -->
+    <script src="assets/js/bootstrap-notify.js"></script>
+
+    <!-- Light Bootstrap Table Core javascript and methods for Demo purpose -->
+	<script src="assets/js/light-bootstrap-dashboard.js"></script>
+
+	<!-- Light Bootstrap Table DEMO methods, don't include it in your project! -->
+	<script src="assets/js/demo.js"></script>
+
+    <script src='assets/js/vue-2.1.10.min.js'></script>
+
+    <script type="text/javascript">        
+        $(document).ready(function(){
+            var token = localStorage.getItem('token');
+            console.log(token);
+            $.ajax({
+                url:'http://radar.3vcar.com/shop/category',
+                data:{
+                    code:'all',
+                },
+                dataType:'json',
+                type:'GET',
+                header:{
+                    'content-type': 'application/json',
+                    'Authorization': token
+                },
+                success:function(res){
+                    console.log(res);
+                    for (var i = 0; i < res.length; i++) {
+                        res[i].urlName = encodeURIComponent(res[i].name);
+                    };
+                    console.log(res);
+                    vm.$data.list = res;
+                }
+            });
+            var vm = new Vue({
+                el:'#data',
+                data:{
+                    list:'',
+                },
+                methods:{
+                    deleteItem:function(code){
+                        console.log(code);
+                        var con = confirm('确认删除');
+                        var list = this.list;
+                        if (con) {
+                            $.ajax({
+                                url:'http://radar.3vcar.com/admin/category/delete',
+                                data:{
+                                    code:code,
+                                },
+                                dataType:'json',
+                                type:'POST',
+                                header:{
+                                    'content-type': 'application/json',
+                                    'Authorization': "eyJFeHBpcmVkTWludXRlcyI6IlwvRGF0ZSgyNTM0MDIyNzE5OTk5OTkpXC8iLCJUeXBlIjoiSldUIiwiQWxnb3JpdGhtIjowfQ.MjYwMzQxNzY.ODkzOTAxNDI1MTdmMzEwODMwZTkzOGJhY2RjZGUwOTE3M2JmYzI5Zg"
+                                },
+                                success(res){
+                                    console.log(res);
+                                    if(res.Success){
+                                        for (var i = 0; i < list.length; i++) {
+                                            if (list[i].code == code) {
+                                                list.splice(i,1);
+                                            };
+                                        };
+                                        vm.$data.list = list;
+                                    };
+                                },
+                            });
+                        };                            
+                    },
+                },
+            });    
+        });    
+    </script>
+</html>
+

@@ -1,43 +1,21 @@
-<!doctype html>
-<html lang="en">
+<html lang="utf-8">
 <head>
 	<meta charset="utf-8" />
 	<link rel="icon" type="image/png" href="assets/img/favicon.ico">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-
 	<title>Light Bootstrap Dashboard by Creative Tim</title>
-
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
-
-
-    <!-- Bootstrap core CSS     -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
-
-    <!-- Animation library for notifications   -->
+    <link href="assets/css/flatpickr.css" rel="stylesheet" type="text/css">
     <link href="assets/css/animate.min.css" rel="stylesheet"/>
-
-    <!--  Light Bootstrap Table core CSS    -->
     <link href="assets/css/light-bootstrap-dashboard.css" rel="stylesheet"/>
-
-
-    <!--  CSS for Demo Purpose, don't include it in your project     -->
     <link href="assets/css/demo.css" rel="stylesheet" />
-
-
-    <!--     Fonts and icons     -->
-    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
     <link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
 </head>
 <body>
-
 <div class="wrapper">
-    <div class="sidebar" data-color="purple" data-image="assets/img/sidebar-5.jpg">
-
-    <!--   you can change the color of the sidebar using: data-color="blue | azure | green | orange | red | purple" -->
-
-
+    <div class="sidebar" data-color="blue" data-image="assets/img/sidebar-5.jpg">
     	<div class="sidebar-wrapper">
             <div class="logo">
                 <a href="http://www.creative-tim.com" class="simple-text">
@@ -59,7 +37,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="user.html">
+                    <a href="service.html">
                         <i class="pe-7s-note2"></i>
                         <p>服务类型</p>
                     </a>
@@ -81,10 +59,43 @@
     </div>
 
     <div class="main-panel">
-        
+        <nav class="navbar navbar-default navbar-fixed" style="background-color:#f8f8f8;border-bottom: none;">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-left">
+                        <li>
+                            
+                        </li>
+                        <li class="dropdown">
+                              
+                        </li>
+                        <li>
+                           
+                        </li>
+                    </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                           
+                        </li>
+                        <li class="dropdown">
+                              
+                        </li>
+                        <li>
+                            <a href="#" style="color: #f8f8f8;">
+                                占位
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
 
 
-        <div class="content">
+        <div class="content" id="detailsForm">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-8">
@@ -92,17 +103,12 @@
                             <div class="header">
                                 <h4 class="title">详情</h4>
                             </div>
-                            <div class="content details-content">
-                                <form>
+                            <div class="content details-content" >
+                                <form v-for="item in items" v-on:submit.prevent="onSubmit">
                                     <div class="typo-line">
                                         <p class="category">分类名称</p>
                                         <p class="text-muted">
-                                        玻璃清洁
-                                        </p>
-                                    </div><div class="typo-line">
-                                        <p class="category">一级分类</p>
-                                        <p class="text-muted">
-                                        对公
+                                        {{item.category}}
                                         </p>
                                     </div><div class="typo-line">
                                         <p class="category">服务范围</p>
@@ -113,26 +119,21 @@
                                     <div class="typo-line">
                                         <p class="category">服务介绍</p>
                                         <p class="text-muted">
-                                        日常保洁包括抽油烟机清理、户内外玻璃清洁、地板清洁、家具室内清洁等服务。价格根据具体情况会有所不同，欢迎…
+                                        {{item.description}}
                                         </p>
                                     </div>
-                                    <div class="typo-line">
+                                    <div class="typo-line" id="calendarInput">
                                         <p class="category">有效日期</p>
                                         <p class="text-muted">
-                                        2017年3月3日&nbsp&nbsp&nbsp&nbsp至&nbsp&nbsp&nbsp&nbsp
-                                        <select>
-                                          <option>2017年3月3日</option>
-                                          <option>2017年3月4日</option>
-                                          <option>2017年3月5日</option>
-                                          <option>2017年3月6日</option>
-                                          <option>2017年3月7日</option>
-                                        </select>
+                                        {{item.expired}}&nbsp;&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;&nbsp;
+                                		<input class="calendar" v-model="time" :data-default-date="item.expired" :data-min-date="item.expired" data-max-date="2018-03-16">                
                                         </p>
                                     </div>
                                     <div class="typo-line">
                                         <p class="category">营销推广</p>
                                         <p class="text-muted">
-                                        <label class="checkbox-inline"><input type="checkbox" value=""></label>
+                                        <label class="checkbox-inline">
+                                        <input type="checkbox" v-model="item.hot" value=""></label>
                                         推广
                                         </p>
                                     </div>
@@ -140,15 +141,16 @@
                                         <p class="category">审核</p>
                                         <p class="text-muted">
                                         <label class="radio-inline">
-                                          <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                                          <input type="radio" :checked="radio" v-model="picked" name="inlineRadioOptions" id="inlineRadio1" value="Authenticated">
                                         </label>
                                         通过
                                         <label class="radio-inline">
-                                          <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                                          <input type="radio" :checked="!radio" v-model="picked" name="inlineRadioOptions" id="inlineRadio2" value="NoPass">
                                         </label>
                                         未通过
                                         <label class="radio-inline">
-                                        <input type="text" class="form-control" style="width: 250px;height: 30px;margin-top: 3px;" placeholder="审核意见" >
+                                        <input type="text" class="form-control" style="width: 250px;height: 30px;margin-top: 3px;" v-model="item.comment" placeholder="审核意见" >
+                                        
                                         </label>
                                         </p>
                                     </div>
@@ -159,64 +161,147 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card card-user">
-                            <!-- <div class="image">
-                                <img src="https://ununsplash.imgix.net/photo-1431578500526-4d9613015464?fit=crop&fm=jpg&h=300&q=75&w=400" alt="..."/>
-                            </div> -->
+                    <div class="col-md-4" id="cardUser">
+                        <div class="card card-user" v-for="item in items">
                             <div class="content">
                                 <div class="author">
                                      <a href="#">
-                                    <img class="avatar border-gray" src="assets/img/faces/face-3.jpg" alt="..."/>
-
-                                      <h4 class="title">帮家博士
+                                    <img class="avatar border-gray" :src="item.head">
+                                      <h4 class="title">
+                                      {{item.name}}
                                       </h4>
                                     </a>
                                 </div>
                                 <p class="description text-center">
-                                18332563755
+                                {{item.phone}}
                                 </p>
                             </div>
                             <hr>
                             <div class="text-center">
-                                 <p class="details-info">天津市 滨海新区 经济技术开发区 第二大街泰达MSD</p> <br>
-                                                    <div class="details-author">已认证</div> <br>
+                                <p class="details-info">{{item.address}}</p> <br>
+                                <div class="details-author">{{author}}</div>
+                                <br>
 
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
-
-
     </div>
 </div>
 
 
-</body>
 
-    <!--   Core JS Files   -->
     <script src="assets/js/jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="assets/js/flatpickr.js" type="text/javascript"></script>
+    
 	<script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
-
-	<!--  Checkbox, Radio & Switch Plugins -->
-	<script src="assets/js/bootstrap-checkbox-radio-switch.js"></script>
-
-	<!--  Charts Plugin -->
+	<script src="assets/js/app.js"></script>
+    <script src="assets/js/app.moment.js" type="text/javascript"></script>
 	<script src="assets/js/chartist.min.js"></script>
-
-    <!--  Notifications Plugin    -->
     <script src="assets/js/bootstrap-notify.js"></script>
-
-    <!--  Google Maps Plugin    -->
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
-
-    <!-- Light Bootstrap Table Core javascript and methods for Demo purpose -->
 	<script src="assets/js/light-bootstrap-dashboard.js"></script>
+    <script src="assets/js/vue-2.1.10.min.js"></script>
+    <script src="assets/js/demo.js"></script>
+    <script type="text/javascript">
+    
+        var vmTwo = new Vue({
+          el: '#detailsForm',
+          data: {
+            items: [],
+            radio:false,
+            time:"",
+            picked:"",
+            number: 1,
+            a:"",
+            b:"",
+            author:""
+          },
+          methods: {
+                    onSubmit:function(e){
+                        var tips = confirm('是否提交');
+                        if(!tips){
+                            return ;
+                        }else{
+                            console.log(typeof this.picked)
+                            console.log(this.time)
+                            console.log(this.radio)
+                            console.log(this.picked)
+                            console.log(this.items[0].hot)
+                            console.log(this.items[0].code)
+                            console.log(this.items[0].comment)
+                            
+                            $.ajax({
+                                url:"http://radar.3vcar.com/admin/shop/approval",
+                                dataType:"json",
+                                type:"POST",
+                                data:{
+                                    code: this.items[0].code,
+                                    status: this.picked,
+                                    expired : this.time,
+                                    hot :this.items[0].hot,
+                                    comment : this.items[0].comment
+                                },
+                                header:{
+                                    'content-type': 'application/json',
+                                    'Authorization': "eyJWYWxpZCI6dHJ1ZX0.MjYwMzQxNzY.ZGM4OTVkMTYzZWY0NDc4ODE4ODgzNDc4ZjdmMmYyY2RhMDI4MzJlMw"
+                                },
+                                success: function (data) {
+                                    console.log(data);
+                                    if(data.Success){
+                                        window.location.href = "./table.html"
+                                    }else{
+						              	alert("失败")
+                                    }
+                                }
+                            });
+                        }
+                        
+                    }
+                }
+        })
+        $("body").ready(function(){
+                  
+            var dataCode = window.app.getQueryString("code");
+                $.ajax({
+                    url:"http://radar.3vcar.com/admin/shop/view",
+                    dataType:"json",
+                    data:{
+                        code: dataCode
+                    },
+                    header:{
+                        'content-type': 'application/json',
+                        'Authorization': "eyJWYWxpZCI6dHJ1ZX0.MjYwMzQxNzY.ZGM4OTVkMTYzZWY0NDc4ODE4ODgzNDc4ZjdmMmYyY2RhMDI4MzJlMw"
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        vmTwo.$data.items.push(data);
+                        for(var i=0;i<vmTwo.$data.items.length;i++){
+                            vmTwo.$data.items[i].expired = window.moment.format(vmTwo.$data.items[i].expired,"yyyy年MM月dd日")
+                        }
+                        //根据状态设置通过复选框
+                        if(vmTwo.$data.items[0].status == "Authenticated"){
+                            vmTwo.$data.picked = "Authenticated"
+                        }else if(vmTwo.$data.items[0].status == "NoPass"){
+                            vmTwo.$data.picked = "NoPass"
+                        }
+                        var thatStatus = {
+                          "Authenticating": "认证中",
+                          "Authenticated": "已认证",
+                          "NoPass": "未通过",
+                          "None": "无"
+                        }
+                        vmTwo.$data.author = thatStatus[vmTwo.$data.items[0].status];
 
-	<!-- Light Bootstrap Table DEMO methods, don't include it in your project! -->
-	<script src="assets/js/demo.js"></script>
+                        Vue.nextTick(function () {
+                            $(".calendar").flatpickr();  
+                        });
+                    }
+                });
+                
 
+        })
+    </script>
+</body>
 </html>

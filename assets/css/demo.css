@@ -87,3 +87,7 @@
     border-radius: 20px;
     font-size: 10px;
 }
+.table-footer{
+    width: 450px;
+    margin: 10px auto;
+}

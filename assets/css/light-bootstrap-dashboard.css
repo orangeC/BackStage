@@ -461,7 +461,7 @@ body > .navbar-collapse[data-color="purple"]:after {
   min-height: 100%;
 }
 .main-panel > .content {
-  padding: 100px 15px;
+  padding: 30px 15px;
   min-height: calc(100% - 123px);
 }
 .main-panel > .footer {
@@ -1377,7 +1377,7 @@ body > .navbar-collapse[data-color="purple"]:after {
 }
 .navbar .navbar-nav > li > a {
   padding: 10px 15px;
-  margin: 10px 3px;
+  margin: 10px 3px; /*我改过的地方，原数据为margin：10px 3px*/
   position: relative;
 }
 .navbar .navbar-nav > li > a.btn {
