@@ -1,32 +1,17 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <title>数据统计</title>
 	<meta charset="utf-8" />
-	<link rel="icon" type="image/png" href="assets/img/favicon.ico">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-
-	<title>Light Bootstrap Dashboard by Creative Tim</title>
-
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
-
-
-    <!-- Bootstrap core CSS     -->
+    <link rel="icon" type="image/png" href="assets/img/favicon.ico">
+    <!--  CSS   -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
-
-    <!-- Animation library for notifications   -->
     <link href="assets/css/animate.min.css" rel="stylesheet"/>
-
-    <!--  Light Bootstrap Table core CSS    -->
     <link href="assets/css/light-bootstrap-dashboard.css" rel="stylesheet"/>
-
-
-    <!--  CSS for Demo Purpose, don't include it in your project     -->
     <link href="assets/css/demo.css" rel="stylesheet" />
-
-
-    <!--     Fonts and icons     -->
-    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
 
 </head>
@@ -129,18 +114,6 @@
                             </div>
                             <div class="content">
                                 <div id="chartPreferences" class="ct-chart ct-perfect-fourth"></div>
-
-                                <div class="footer">
-                                    <div class="legend">
-                                        <i class="fa fa-circle text-info"></i> Open
-                                        <i class="fa fa-circle text-danger"></i> Bounce
-                                        <i class="fa fa-circle text-warning"></i> Unsubscribe
-                                    </div>
-                                    <hr>
-                                    <div class="stats">
-                                        <i class="fa fa-clock-o"></i> Campaign sent 2 days ago
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -153,40 +126,17 @@
 
                             </div>
                             <div class="content table-responsive table-full-width">
-                                <table class="table table-hover table-striped">
+                                <table class="table table-hover table-striped" id="static">
                                     <thead>
                                         <th>地区</th>
                                         <th>商家数量</th>
                                         <th>点赞数量</th>
-                                        
                                     </thead>
-                                    <tbody>
+                                    <tbody v-bind:id="load">
                                         <tr>
                                             <td>天津全部</td>
                                             <td>20</td>
-                                            <td>20</td>
-                                        
-                                        </tr>
-                                        <tr>
-                                            <td>河东区</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            
-                                        </tr>
-                                        <tr>
-                                            <td>河西区</td>
-                                            <td>155</td>
-                                            <td>20</td>
-                                        </tr>
-                                        <tr>
-                                            <td>滨海新区</td>
-                                            <td>1</td>
-                                            <td>99</td>
-                                        </tr>
-                                        <tr>
-                                            <td>南开区</td>
-                                            <td>5</td>
-                                            <td>90</td>
+                                            <td>{{vmArea}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -208,63 +158,109 @@
     <!--   Core JS Files   -->
     <script src="assets/js/jquery-1.10.2.js" type="text/javascript"></script>
 	<script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
-
-	<!--  Checkbox, Radio & Switch Plugins -->
-	<script src="assets/js/bootstrap-checkbox-radio-switch.js"></script>
-
-	<!--  Charts Plugin -->
-	<script src="assets/js/chartist.min.js"></script>
-
-    <!--  Notifications Plugin    -->
-    <script src="assets/js/bootstrap-notify.js"></script>
-    
-    <!-- Light Bootstrap Table Core javascript and methods for Demo purpose -->
-	<script src="assets/js/light-bootstrap-dashboard.js"></script>
-
-	<!-- Light Bootstrap Table DEMO methods, don't include it in your project! -->
+    <script src="assets/js/vue-2.1.10.min.js" type="text/javascript"></script>
+	<!-- <script src="assets/js/bootstrap-checkbox-radio-switch.js"></script> -->
+    <script src="assets/js/app.moment.js" type="text/javascript"></script>
+	<!-- <script src="assets/js/chartist.min.js"></script> -->
+    <!-- <script src="assets/js/bootstrap-notify.js"></script> -->
+	<!-- <script src="assets/js/light-bootstrap-dashboard.js"></script> -->
     <script src="assets/js/echarts.common.min.js" type="text/javascript"></script>
 
 	<script type="text/javascript">
-    //图形
-    var myChart = echarts.init(document.getElementById('chartPreferences'));
-        
-    // 填入数据
-    var option = {
-            title : {
-                text: '用户分布',
-                subtext: '商家与用户汇总',
-                x:'center'
+    $(document).ready(function(){
+        var cookies = document.cookies;
+        $.ajax({
+            url:'http://radar.3vcar.com/admin/shop/summary',
+            data:{
+                code:''
             },
-            tooltip : {
-                trigger: 'item',
-                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            dataType:'json',
+            type:'GET',
+            header:{
+                'content-type': 'application/json',
+                'Authorization': "eyJFeHBpcmVkTWludXRlcyI6IlwvRGF0ZSgyNTM0MDIyNzE5OTk5OTkpXC8iLCJUeXBlIjoiSldUIiwiQWxnb3JpdGhtIjowfQ.MjYwMzQxNzY.ODkzOTAxNDI1MTdmMzEwODMwZTkzOGJhY2RjZGUwOTE3M2JmYzI5Zg"
             },
-            legend: {
-                orient: 'vertical',
-                left: 'left',
-                data: ['商家','用户']
-            },
-            series : [
-                {
-                    name: '访问来源',
-                    type: 'pie',
-                    radius : '55%',
-                    center: ['50%', '60%'],
-                    data:[
-                        {value:amount.vendor, name:'商家'},
-                        {value:amount.visitor, name:'用户'}
-                    ],
-                    itemStyle: {
-                        emphasis: {
-                            shadowBlur: 10,
-                            shadowOffsetX: 0,
-                            shadowColor: 'rgba(0, 0, 0, 0.5)'
-                        }
+            success:function(data){
+                var citys=[];
+                var charts=[];
+                for (var i = data.length - 1; i >= 0; i--) {
+                    citys.push(data[i].city);
+                    chart = {'value':data[i].shop,'name':data[i].city};
+                    charts.push(chart)
+                };
+                //图形
+
+
+                var myChart = echarts.init(document.getElementById('chartPreferences'));
+                    
+                // 填入数据
+                var option = {
+                        title : {
+                            text: '用户分布',
+                            subtext: '商家与用户汇总',
+                            x:'center'
+                        },
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+                        legend: {
+                            orient: 'vertical',
+                            left: 'left',
+                            data: citys
+                        },
+                        series : [
+                            {
+                                name: '访问来源',
+                                type: 'pie',
+                                radius : '55%',
+                                center: ['50%', '60%'],
+                                data:charts,
+                                itemStyle: {
+                                    emphasis: {
+                                        shadowBlur: 10,
+                                        shadowOffsetX: 0,
+                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                    }
+                                }
+                            }
+                        ]
+                    };
+                myChart.setOption(option);
+            }
+        });
+    })
+    
+    var vm=new Vue({
+        el:'#static',
+        data:{
+            vmArea:123
+        },
+        methods:{
+            load:function(){
+                var that=this;
+                $.ajax({
+                    url:'http://radar.3vcar.com/admin/shop/summary',
+                    data:{
+                        city:''
+                    },
+                    dataType:'json',
+                    header:{
+                        'content-type': 'application/json',
+                        'Authorization': "eyJFeHBpcmVkTWludXRlcyI6IlwvRGF0ZSgyNTM0MDIyNzE5OTk5OTkpXC8iLCJUeXBlIjoiSldUIiwiQWxnb3JpdGhtIjowfQ.MjYwMzQxNzY.ODkzOTAxNDI1MTdmMzEwODMwZTkzOGJhY2RjZGUwOTE3M2JmYzI5Zg"
+                    },
+                    success:function(data){
+                        console.log(data);
+                        that.load();
                     }
-                }
-            ]
-        };
-    myChart.setOption(option);
+                });
+                this.load();
+            }
+        }
+    });
+    $(document).ready(function(){
+                vm.load();
+            })
 	</script>
 
 </html>

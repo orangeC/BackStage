@@ -1,50 +1,29 @@
 <!doctype html>
 <html lang="en">
 <head>
-	<meta charset="utf-8" />
-	<link rel="icon" type="image/png" href="assets/img/favicon.ico">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-
-	<title>审核认证</title>
-
-	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <title>审核认证</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/png" href="assets/img/favicon.ico">
 
-
-    <!-- Bootstrap core CSS     -->
+    <!--  CSS   -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
-
-    <!-- Animation library for notifications   -->
     <link href="assets/css/animate.min.css" rel="stylesheet"/>
-
-    <!--  Light Bootstrap Table core CSS    -->
     <link href="assets/css/light-bootstrap-dashboard.css" rel="stylesheet"/>
-
-
-    <!--  CSS for Demo Purpose, don't include it in your project     -->
     <link href="assets/css/demo.css" rel="stylesheet" />
-
-
-    <!--     Fonts and icons     -->
-    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet"> -->
-    <!-- <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'> -->
-    <link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
 </head>
 <body>
 
 <div class="wrapper">
     <div class="sidebar" data-color="blue" data-image="assets/img/sidebar-4.jpg">
-
-    <!--   you can change the color of the sidebar using: data-color="blue | azure | green | orange | red | purple" -->
-
-
     	<div class="sidebar-wrapper">
             <div class="logo">
                 <a href="" class="simple-text">
                     管理后台
                 </a>
             </div>
-
             <ul class="nav">
                 <li class="active">
                     <a href="index.html">
@@ -120,19 +99,21 @@
                                 <h4 class="title">审核认证</h4>
                                 <p class="category">30天内到期商家列表</p>
                             </div>
-                            <div class="content table-responsive table-full-width">
+                            <div class="content table-responsive table-full-width" id="vmStore" >
                                 <table class="table table-hover table-striped" style="text-align: center">
                                     <th style="text-align: center">编码</th>
                                 	<th style="text-align: center">商家名称</th>
                                 	<th style="text-align: center">截止日期</th>
-                                    <tbody id="approval">
-                                        
+                                    <tbody id="tableTbody">
+                                        <tr v-for="vm in vmTableList.DataSource">
+                                            <td>{{vm.code}}</td>
+                                            <td>{{vm.name}}</td>
+                                            <td>{{vm.last}}</td>
+                                        </tr>
                                     </tbody>
                                 </table>
-                                <div>
-                                    <nav aria-label="Page navigation">
-                                        <ul class="pagination" id="pagination"></ul>
-                                    </nav>
+                                <div class="table-footer">
+                                    <ul class="pagination" id="pages"></ul>
                                 </div>
                             </div>
                         </div>
@@ -141,12 +122,6 @@
                 </div>
             </div>
         </div>
-
-        <footer class="footer">
-            
-        </footer>
-
-
     </div>
 </div>
 
@@ -155,102 +130,69 @@
 
     <!--   Core JS Files   -->
     <script src="assets/js/jquery-1.10.2.js" type="text/javascript"></script>
-	<script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
-    <script type="text/javascript" src="assets/js/jquery.twbsPagination.min.js"></script>
-	<!--  Checkbox, Radio & Switch Plugins -->
-	<script src="assets/js/bootstrap-checkbox-radio-switch.js"></script>
-
-	<!--  Charts Plugin -->
-	<script src="assets/js/chartist.min.js"></script>
-
-    <!--  Notifications Plugin    -->
-    <script src="assets/js/bootstrap-notify.js"></script>
-
-    <!--  Google Maps Plugin    -->
-    <!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>-->
-
-    <!-- Light Bootstrap Table Core javascript and methods for Demo purpose -->
-	<script src="assets/js/light-bootstrap-dashboard.js"></script>
-
-	<!-- Light Bootstrap Table DEMO methods, don't include it in your project! -->
-	<script src="assets/js/demo.js"></script>
-
+    <script src="assets/js/vue-2.1.10.min.js" type="text/javascript"></script>
+    <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="assets/js/jquery.twbsPagination.min.js" type="text/javascript" ></script>
+    <script src="assets/js/app.moment.js" type="text/javascript"></script>
+    
     <script type="text/javascript">
-        var index={"PrevPage":-1,"NextPage":-1,"TotalPages":2,"TotalRecords":12,"PageSize":10,"PageIndex":0,"DataSource":
-    [{"expired":"2017-03-17T06:38:18.867Z","last":"2017-03-17T06:38:18.867Z","hot":false,"code":68770816,"status":"None","type":"Modify","scope":null,"catgeory":"休闲","phone":null,"name":"3"},
-    {"expired":"2017-03-17T06:36:27.477Z","last":"2017-03-17T06:36:27.477Z","hot":false,"code":68769793,"status":"None","type":"Modify","scope":null,"catgeory":"旅游","phone":null,"name":"2"},
-    {"expired":"2017-03-17T06:36:11.367Z","last":"2017-03-17T06:36:11.367Z","hot":false,"code":68769792,"status":"None","type":"Modify","scope":null,"catgeory":"旅游","phone":null,"name":"2"},
-    {"expired":"2017-03-17T06:35:53.537Z","last":"2017-03-17T06:35:53.537Z","hot":false,"code":68769280,"status":"None","type":"Modify","scope":null,"catgeory":"旅游","phone":null,"name":"2"},
-    {"expired":"2017-03-17T06:33:25.740Z","last":"2017-03-17T06:33:25.740Z","hot":false,"code":68768256,"status":"None","type":"Modify","scope":null,"catgeory":"旅游","phone":null,"name":"2"},
-    {"expired":"2017-03-17T05:25:51.383Z","last":"2017-03-17T05:25:51.383Z","hot":false,"code":68733441,"status":"None","type":"Modify","scope":null,"catgeory":"其他","phone":null,"name":"5"},
-    {"expired":"2017-03-17T05:25:16.787Z","last":"2017-03-17T07:03:28.960Z","hot":false,"code":68733440,"status":"None","type":"Apply","scope":null,"catgeory":"休闲","phone":null,"name":"555555"},
-    {"expired":"2017-03-16T07:22:33.313Z","last":"2017-03-16T07:22:33.313Z","hot":false,"code":68056065,"status":"None","type":"Modify","scope":null,"catgeory":"酒店","phone":null,"name":"li"},
-    {"expired":"2017-03-16T07:22:09.3Z","last":"2017-03-16T07:22:09.3Z","hot":false,"code":68056064,"status":"None","type":"Modify","scope":null,"catgeory":"酒店","phone":null,"name":"li"},
-    {"expired":"1905-05-22T16:00:00Z","last":"2017-02-13T02:21:57.953Z","hot":false,"code":45046272,"status":"None","type":"None","scope":null,"catgeory":"快餐","phone":null,"name":"伊势丹"}]}
+        var vm = new Vue({
+              el: '#tableTbody',
+              data: {
+                vmTableList:{},
+                // 搜索条件
+                search: {
+                    PageIndex: 1,
+                    PageSize: 10
+                }
+              },
+              methods: {
+                    load:function(){
+                        var that = this;
+                        $.ajax({
+                            url:"http://radar.3vcar.com/admin/task/index",
+                            dataType:"json",
+                            data:{
+                                page : that.search.PageIndex,
+                                approved:'Finish',
+                                expired:0,
+                            },
+                            header:{
+                                'content-type': 'application/json',
+                                'Authorization': "eyJWYWxpZCI6dHJ1ZX0.MjYwMzQxNzY.ZGM4OTVkMTYzZWY0NDc4ODE4ODgzNDc4ZjdmMmYyY2RhMDI4MzJlMw"
+                            },
+                            success: function (data) {
+                                console.log(data);
+                                vm.$data.vmTableList = data;
+                                //格式化日期
+                                for(var i=0;i<vm.$data.vmTableList.DataSource.length;i++){
+                                    vm.$data.vmTableList.DataSource[i].expired = window.moment.format(vm.$data.vmTableList.DataSource[i].expired,"yyyy-MM-dd")
+                                }
+                                //分页
+                                var $pager = $('#pages');
+                                $pager.empty();
+                                $pager.removeData("twbs-pagination");
+                                $pager.unbind("page");
 
-// function initUserlogData() {  
-    //重置分页组件否则保留上次查询的，一般来说很多问题出现与这三行代码有关如：虽然数据正确但是页码不对仍然为上一次查询出的一致  
-    // $('#pagination').empty();  
-    // $('#pagination').removeData("twbs-pagination");  
-    // $('#pagination').unbind("page");  
-    // //将页面的数据容器制空  
-    // $("#messagebody").empty();  
-    // //设置默认当前页  
-    $('#pagination').twbsPagination({
-        totalPages: index.TotalPages,
-        visiblePages: index.PageSize,
-        onPageClick: function (event, page) {
-            $('#page-content').text('Page ' + page);
-        // $.ajax({  
-        //     url : "",  
-        //     data : {  
-        //         "currentpage" : pagenow  
-        //     },  
-        //     dataType : "json",  
-        //     success : function(data) { 
-                var store = "";  
-                $("#approval").empty();  
-                $.each(index.DataSource, function(index, DataSource) {  
-                    store = store + "<tr>"  +  "<td>"  
-                            + DataSource.code + "</td>" + "<td>"  
-                            + DataSource.name + "</td>" + "<td>"  
-                            + DataSource.last + "</td>" ;  
-                    store = store + "</tr>";  
-                    $("#approval").append(store);  
-                    store = "";  
-                }); 
-                //后台总页数与可见页数比较如果小于可见页数则可见页数设置为总页数，  
-                // if (totalPage < visiblecount) {  
-                //     visiblecount = totalPage;  
-                // }  
-                // $('#pagination').twbsPagination({  
-                //     totalPages : totalPage,  
-                //     visiblePages : visiblecount,  
-                //     version : '1.1',  
-                //     //页面点击时触发事件  
-                //     onPageClick : function(event, page) {  
-                //         // 将当前页数重置为page  
-                //         pagenow = page  
-                //         //调用后台获取数据函数加载点击的页码数据  
-                //         loaddata();  
-                //     }  
-                // });  
-            // },  
-            // error : function(e) {  
-            //     alert("s数据访问失败")  
-            // }  
-  
-        // });  
-    // }  
-    //函数初始化是调用内部函数  
-//     loaddata();  
-        }
-    });
-
-       
-// function loaddata() {  
-
-// };
+                                $pager.twbsPagination({
+                                    totalPages: data.TotalPages,
+                                    visiblePages: data.TotalPages > 5 ? 5 : data.TotalPages,
+                                    startPage: data.PageIndex,
+                                    initiateStartPageClick: false,
+                                    onPageClick: function (event, page) {
+                                        that.search.PageIndex = page;
+                                        that.load();
+                                    }
+                                });
+                            }
+                    
+                        });
+                    }
+                }
+            });
+            $(document).ready(function(){
+                vm.load();
+            })
     </script>
 
 </html>

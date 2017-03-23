@@ -1,44 +1,24 @@
 <!doctype html>
 <html lang="en">
 <head>
-	<meta charset="utf-8" />
-	<link rel="icon" type="image/png" href="assets/img/favicon.ico">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-
-	<title>到期预警</title>
-
-	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <title>到期预警</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/png" href="assets/img/favicon.ico">
 
-
-    <!-- Bootstrap core CSS     -->
+    <!--  CSS   -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
-
-    <!-- Animation library for notifications   -->
     <link href="assets/css/animate.min.css" rel="stylesheet"/>
-
-    <!--  Light Bootstrap Table core CSS    -->
     <link href="assets/css/light-bootstrap-dashboard.css" rel="stylesheet"/>
-
-
-    <!--  CSS for Demo Purpose, don't include it in your project     -->
     <link href="assets/css/demo.css" rel="stylesheet" />
-
-
-    <!--     Fonts and icons     -->
-    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-    <!-- <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'> -->
-    <link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
 </head>
 <body>
 
 <div class="wrapper">
     <div class="sidebar" data-color="blue" data-image="assets/img/sidebar-4.jpg">
-
-    <!--   you can change the color of the sidebar using: data-color="blue | azure | green | orange | red | purple" -->
-
-
-    	<div class="sidebar-wrapper">
+        <div class="sidebar-wrapper">
             <div class="logo">
                 <a href="" class="simple-text">
                     管理后台
@@ -77,7 +57,7 @@
                     </a>
                 </li>
             </ul>
-    	</div>
+        </div>
     </div>
 
     <div class="main-panel">
@@ -120,52 +100,22 @@
                                 <h4 class="title">到期预警</h4>
                                 <p class="category">30天内到期商家列表</p>
                             </div>
-                            <div class="content table-responsive table-full-width">
-                                <table class="table table-hover table-striped">
-                                    <thead>
-                                        <th>编码</th>
-                                    	<th>商家名称</th>
-                                    	<th>截止日期</th>
-                                    	
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                        	<td>9748482</td>
-                                        	<td><a href="details.html">邦家博士</a></td>
-                                        	<td>2017年8月23日</td>
-                                        
-                                        </tr>
-                                        <tr>
-                                        	<td>15836375</td>
-                                        	<td>小宝家政</td>
-                                        	<td>2017年8月23日</td>
-                                        	
-                                        </tr>
-                                        <tr>
-                                        	<td>10573982</td>
-                                        	<td>涂家焕新</td>
-                                        	<td>2017年8月23日</td>
-                                        </tr>
-                                        <tr>
-                                            <td>9748482</td>
-                                            <td>邦家博士</td>
-                                            <td>2017年8月23日</td>
-                                        
-                                        </tr>
-                                        <tr>
-                                            <td>15836375</td>
-                                            <td>小宝家政</td>
-                                            <td>2017年8月23日</td>
-                                            
-                                        </tr>
-                                        <tr>
-                                            <td>10573982</td>
-                                            <td>涂家焕新</td>
-                                            <td>2017年8月23日</td>
+                            <div class="content table-responsive table-full-width" id="vmStore" >
+                                <table class="table table-hover table-striped" style="text-align: center">
+                                    <th style="text-align: center">编码</th>
+                                    <th style="text-align: center">商家名称</th>
+                                    <th style="text-align: center">截止日期</th>
+                                    <tbody id="tableTbody">
+                                        <tr v-for="vm in vmTableList.DataSource">
+                                            <td>{{vm.code}}</td>
+                                            <td>{{vm.name}}</td>
+                                            <td>{{vm.last}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
-
+                                <div class="table-footer">
+                                    <ul class="pagination" id="pages"></ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -173,39 +123,76 @@
                 </div>
             </div>
         </div>
-
-        <footer class="footer">
-            
-        </footer>
-
-
     </div>
 </div>
-
 
 </body>
 
     <!--   Core JS Files   -->
     <script src="assets/js/jquery-1.10.2.js" type="text/javascript"></script>
-	<script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="assets/js/vue-2.1.10.min.js" type="text/javascript"></script>
+    <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="assets/js/jquery.twbsPagination.min.js" type="text/javascript" ></script>
+    <script src="assets/js/app.moment.js" type="text/javascript"></script>
 
-	<!--  Checkbox, Radio & Switch Plugins -->
-	<script src="assets/js/bootstrap-checkbox-radio-switch.js"></script>
+    <script type="text/javascript">
+        var vm = new Vue({
+              el: '#tableTbody',
+              data: {
+                vmTableList:{},
+                // 搜索条件
+                search: {
+                    PageIndex: 1,
+                    PageSize: 10
+                }
+              },
+              methods: {
+                    load:function(){
+                        var that = this;
+                        $.ajax({
+                            url:"http://radar.3vcar.com/admin/task/index",
+                            dataType:"json",
+                            data:{
+                                page : that.search.PageIndex,
+                                approved:0,
+                                expired:30
+                            },
+                            header:{
+                                'content-type': 'application/json',
+                                'Authorization': "eyJWYWxpZCI6dHJ1ZX0.MjYwMzQxNzY.ZGM4OTVkMTYzZWY0NDc4ODE4ODgzNDc4ZjdmMmYyY2RhMDI4MzJlMw"
+                            },
+                            success: function (data) {
+                                console.log(data);
+                                vm.$data.vmTableList = data;
+                                //格式化日期
+                                for(var i=0;i<vm.$data.vmTableList.DataSource.length;i++){
+                                    vm.$data.vmTableList.DataSource[i].expired = window.moment.format(vm.$data.vmTableList.DataSource[i].expired,"yyyy-MM-dd")
+                                }
+                                //分页
+                                var $pager = $('#pages');
+                                $pager.empty();
+                                $pager.removeData("twbs-pagination");
+                                $pager.unbind("page");
 
-	<!--  Charts Plugin -->
-	<script src="assets/js/chartist.min.js"></script>
-
-    <!--  Notifications Plugin    -->
-    <script src="assets/js/bootstrap-notify.js"></script>
-
-    <!--  Google Maps Plugin    -->
-    <!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>-->
-
-    <!-- Light Bootstrap Table Core javascript and methods for Demo purpose -->
-	<script src="assets/js/light-bootstrap-dashboard.js"></script>
-
-	<!-- Light Bootstrap Table DEMO methods, don't include it in your project! -->
-	<script src="assets/js/demo.js"></script>
-
+                                $pager.twbsPagination({
+                                    totalPages: data.TotalPages,
+                                    visiblePages: data.TotalPages > 5 ? 5 : data.TotalPages,
+                                    startPage: data.PageIndex,
+                                    initiateStartPageClick: false,
+                                    onPageClick: function (event, page) {
+                                        that.search.PageIndex = page;
+                                        that.load();
+                                    }
+                                });
+                            }
+                    
+                        });
+                    }
+                }
+            });
+            $(document).ready(function(){
+                vm.load();
+            })
+    </script>
 
 </html>

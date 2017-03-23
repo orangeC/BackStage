@@ -77,7 +77,8 @@
             type: type,
             timeout: 10000,
             headers: {
-                'Authorization': owner.getuser()
+                'content-type': 'application/json',
+                // 'Authorization': owner.getuser()
             },
             success: success,
             error: function (xhr, type, errorThrown) {
@@ -87,8 +88,21 @@
                 }
             }
         });
-
     };
+    owner.token = function (url,data,type,token,success){
+        jQuery.ajax({
+            url:"http://radar.3vcar.com" + url,
+            data:data,
+            dataType:'json',
+            type:type,
+            timeout:10000,
+            headers:{
+                'content-type': 'application/json',
+                'Authorization':token,
+            },
+            success:success,
+        })
+    }
 
 
     // -------------------工具相关的--------------------------------------- 

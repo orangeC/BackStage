@@ -3,7 +3,7 @@
 	<meta charset="utf-8" />
 	<link rel="icon" type="image/png" href="assets/img/favicon.ico">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<title>Light Bootstrap Dashboard by Creative Tim</title>
+	<title>商家信息</title>
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
@@ -125,15 +125,15 @@
                                     <div class="typo-line" id="calendarInput">
                                         <p class="category">有效日期</p>
                                         <p class="text-muted">
-                                        {{item.expired}}&nbsp;&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;&nbsp;
-                                		<input class="calendar" v-model="time" :data-default-date="item.expired" :data-min-date="item.expired" data-max-date="2018-03-16">                
+                                        {{item.last}}&nbsp;&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;&nbsp;
+                                		<input class="calendar" :data-default-date="item.expired" :data-min-date="item.last" data-max-date="2020-01-01" v-model="item.expired">   
                                         </p>
                                     </div>
                                     <div class="typo-line">
                                         <p class="category">营销推广</p>
                                         <p class="text-muted">
                                         <label class="checkbox-inline">
-                                        <input type="checkbox" v-model="item.hot" value=""></label>
+                                        <input type="checkbox" v-model="item.hot"></label>
                                         推广
                                         </p>
                                     </div>
@@ -205,33 +205,40 @@
     <script src="assets/js/vue-2.1.10.min.js"></script>
     <script src="assets/js/demo.js"></script>
     <script type="text/javascript">
-    
-        var vmTwo = new Vue({
+
+        var vm = new Vue({
           el: '#detailsForm',
           data: {
             items: [],
             radio:false,
-            time:"",
             picked:"",
             number: 1,
-            a:"",
-            b:"",
             author:""
           },
-          methods: {
+            methods: {
                     onSubmit:function(e){
                         var tips = confirm('是否提交');
                         if(!tips){
                             return ;
                         }else{
-                            console.log(typeof this.picked)
-                            console.log(this.time)
-                            console.log(this.radio)
-                            console.log(this.picked)
-                            console.log(this.items[0].hot)
-                            console.log(this.items[0].code)
-                            console.log(this.items[0].comment)
-                            
+                            // window.app.token(
+                            //     "/admin/shop/approval",
+                            //     {
+                            //         code: this.items[0].code,
+                            //         status: this.picked,
+                            //         expired : this.items[0].expired,
+                            //         hot :this.items[0].hot,
+                            //         comment : this.items[0].comment
+                            //     },
+                            //     "POST",
+                            //     this.token,
+                            //     function(res){
+                            //         if(res.Success){
+                            //             window.location.href = "./table.html"
+                            //         }else{
+                            //             alert("失败")
+                            //         }
+                            //     })
                             $.ajax({
                                 url:"http://radar.3vcar.com/admin/shop/approval",
                                 dataType:"json",
@@ -239,13 +246,13 @@
                                 data:{
                                     code: this.items[0].code,
                                     status: this.picked,
-                                    expired : this.time,
+                                    expired : this.items[0].expired,
                                     hot :this.items[0].hot,
                                     comment : this.items[0].comment
                                 },
                                 header:{
                                     'content-type': 'application/json',
-                                    'Authorization': "eyJWYWxpZCI6dHJ1ZX0.MjYwMzQxNzY.ZGM4OTVkMTYzZWY0NDc4ODE4ODgzNDc4ZjdmMmYyY2RhMDI4MzJlMw"
+                                    'Authorization': this.token
                                 },
                                 success: function (data) {
                                     console.log(data);
@@ -258,48 +265,46 @@
                             });
                         }
                         
+                    },
+                    load:function(token){
+                        var that = this;
+                        var dataCode = window.app.getQueryString("code");
+                        that.token = token;
+                        window.app.token("/admin/shop/view",{code: dataCode},"GET",token,function(res){
+                            that.items.push(res);
+                            that.items[0].expired = window.moment.format(that.items[0].expired,"yyyy-MM-dd");
+                            that.items[0].last = window.moment.format(that.items[0].last,"yyyy年MM月dd日");
+                            //根据状态设置通过复选框
+                            if(that.items[0].status == "Authenticated"){
+                                that.picked = "Authenticated"
+                            }else if(that.items[0].status == "NoPass"){
+                                that.picked = "NoPass"
+                            }
+                            var thatStatus = {
+                              "Authenticating": "认证中",
+                              "Authenticated": "已认证",
+                              "NoPass": "未通过",
+                              "None": "无"
+                            }
+                            that.author = thatStatus[that.items[0].status];
+                            that.$nextTick(function () {
+                                $(".calendar").flatpickr();  
+                            });
+                        })
                     }
                 }
         })
         $("body").ready(function(){
-                  
-            var dataCode = window.app.getQueryString("code");
-                $.ajax({
-                    url:"http://radar.3vcar.com/admin/shop/view",
-                    dataType:"json",
-                    data:{
-                        code: dataCode
-                    },
-                    header:{
-                        'content-type': 'application/json',
-                        'Authorization': "eyJWYWxpZCI6dHJ1ZX0.MjYwMzQxNzY.ZGM4OTVkMTYzZWY0NDc4ODE4ODgzNDc4ZjdmMmYyY2RhMDI4MzJlMw"
-                    },
-                    success: function (data) {
-                        console.log(data);
-                        vmTwo.$data.items.push(data);
-                        for(var i=0;i<vmTwo.$data.items.length;i++){
-                            vmTwo.$data.items[i].expired = window.moment.format(vmTwo.$data.items[i].expired,"yyyy年MM月dd日")
-                        }
-                        //根据状态设置通过复选框
-                        if(vmTwo.$data.items[0].status == "Authenticated"){
-                            vmTwo.$data.picked = "Authenticated"
-                        }else if(vmTwo.$data.items[0].status == "NoPass"){
-                            vmTwo.$data.picked = "NoPass"
-                        }
-                        var thatStatus = {
-                          "Authenticating": "认证中",
-                          "Authenticated": "已认证",
-                          "NoPass": "未通过",
-                          "None": "无"
-                        }
-                        vmTwo.$data.author = thatStatus[vmTwo.$data.items[0].status];
-
-                        Vue.nextTick(function () {
-                            $(".calendar").flatpickr();  
-                        });
-                    }
-                });
-                
+            //判断token
+            // var token = localStorage.getItem('token');
+            var token = "eyJWYWxpZCI6dHJ1ZX0.MjYwMzQxNzY.ZGM4OTVkMTYzZWY0NDc4ODE4ODgzNDc4ZjdmMmYyY2RhMDI4MzJlMw"
+            vm.load(token);
+            // if(token){
+            //     vm.load();
+            // }else{
+            //     alert("您还未登录");
+            //     window.location.href = "./login.html"
+            // }
 
         })
     </script>
