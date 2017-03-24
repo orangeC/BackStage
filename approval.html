@@ -44,7 +44,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="typography.html">
+                    <a href="static.html">
                         <i class="pe-7s-graph"></i>
                         <p>数据统计</p>
                     </a>
@@ -107,7 +107,7 @@
                                     <tbody id="tableTbody">
                                         <tr v-for="vm in vmTableList.DataSource">
                                             <td>{{vm.code}}</td>
-                                            <td>{{vm.name}}</td>
+                                            <td><a v-bind:href="'./details.html?code='+vm.code">{{vm.name}}</a></td>
                                             <td>{{vm.last}}</td>
                                         </tr>
                                     </tbody>

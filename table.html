@@ -69,14 +69,14 @@
                     <ul class="nav navbar-nav navbar-left">
                         <li>
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <input class="table-formInput" type="text" placeholder="输入公司名称" >
+                                <input class="table-formInput" v-model="business" type="text" placeholder="输入公司名称" >
                             </a>
                         </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
                               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    营销推广
+                                    {{ifhot}}
                                     <b class="caret"></b>
                               </a>
                               <ul class="dropdown-menu">
@@ -101,16 +101,16 @@
                         </li>
                         <li class="dropdown" >
                               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    服务类型
+                                    {{ifCategory}}
                                     <b class="caret"></b>
                               </a>
                               <ul class="dropdown-menu">
-                                <li v-for="item in arrCategory"><a href="#">{{item.name}}</a></li>
+                                <li v-for="item in arrCategory"><a v-on:click="selectCategory(item.name,item.code)" href="#">{{item.name}}</a></li>
                               </ul>
                         </li>
                         <li class="dropdown">
                               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    审核状态
+                                    {{ifStatus}}
                                     <b class="caret"></b>
                               </a>
                               <ul class="dropdown-menu">
@@ -120,8 +120,8 @@
                               </ul>
                         </li>
                         <li>
-                           <a href="">
-                                <i class="fa fa-search">搜索</i>
+                           <a>
+                                <i class="fa fa-search" v-on:click="searchList">搜索</i>
                             </a>
                         </li>
                     </ul>
@@ -206,48 +206,115 @@
                     PageSize: 10
                 },
                 token:"",
+                business:"",
+                ifhot:"营销推广",
+                searchHot:"",
+                ifCategory:"服务类别",
+                searchCategory:"",
+                selectCategoryCode:"",
+                ifStatus:"审核状态",
+                searchStatus:"",
                 arrCategory:[]
               },
               methods: {
                     selectHot:function(bol){
-                        var that = this;
-                        window.app.token("/admin/shop/search",{page : that.search.PageIndex,hot: bol},"GET",that.token,function(res){
-                                that.vmTableList = res;
-                                //格式化日期
-                                for(var i=0;i<that.vmTableList.DataSource.length;i++){
-                                    that.vmTableList.DataSource[i].last = window.moment.format(that.vmTableList.DataSource[i].last,"yyyy-MM-dd")
-                                }
-                                //分页
-                                var $pager = $('#pages');
-                                $pager.empty();
-                                $pager.removeData("twbs-pagination");
-                                $pager.unbind("page");
+                        if(bol == "yes"){
+                            this.ifhot = "推广";
+                            this.searchHot = "yes";
+                        }else{
+                            this.ifhot = "未推广";
+                            this.searchHot = "no";
+                        }
+                        // window.app.token("/admin/shop/search",{page : that.search.PageIndex,hot: bol},"GET",that.token,function(res){
+                        //         that.vmTableList = res;
+                        //         //格式化日期
+                        //         for(var i=0;i<that.vmTableList.DataSource.length;i++){
+                        //             that.vmTableList.DataSource[i].last = window.moment.format(that.vmTableList.DataSource[i].last,"yyyy-MM-dd")
+                        //         }
+                        //         //分页
+                        //         var $pager = $('#pages');
+                        //         $pager.empty();
+                        //         $pager.removeData("twbs-pagination");
+                        //         $pager.unbind("page");
 
-                                $pager.twbsPagination({
-                                    totalPages: res.TotalPages,
-                                    visiblePages: res.TotalPages > 5 ? 5 : res.TotalPages,
-                                    startPage: res.PageIndex,
-                                    initiateStartPageClick: false,
-                                    onPageClick: function (event, page) {
-                                        that.search.PageIndex = page;
-                                        that.selectHot(bol);
-                                    }
-                                });
-                        })
+                        //         $pager.twbsPagination({
+                        //             totalPages: res.TotalPages,
+                        //             visiblePages: res.TotalPages > 5 ? 5 : res.TotalPages,
+                        //             startPage: res.PageIndex,
+                        //             initiateStartPageClick: false,
+                        //             onPageClick: function (event, page) {
+                        //                 that.search.PageIndex = page;
+                        //                 that.selectHot(bol);
+                        //             }
+                        //         });
+                        // })
                     },
                     selectStatus:function(str){
+                        if(str == "Authenticated"){
+                            this.ifStatus = "已通过";
+                            this.searchStatus = "Authenticated";
+                        }else if(str == "Authenticating"){
+                            this.ifStatus = "认证中";
+                            this.searchStatus = "Authenticating";
+                        }else{
+                            this.ifStatus = "未通过";
+                            this.searchStatus = "NoPass";
+                        }
+                        // var that = this;
+                        // var arrStatus = [];
+                        // window.app.token("/admin/shop/search",{page: that.search.PageIndex,ShopStatus: str},"GET",that.token,function(res){
+                        //     //寻找status为与点击项对应的所有对象，放入数组
+                        //     for(var i=0;i<res.DataSource.length;i++){
+                        //         if(res.DataSource[i].status == str){
+                        //             arrStatus.push(res.DataSource[i]);
+                        //         }
+                        //     }
+                        //     //用需要的集合替换请求过来的内容
+                        //     res.DataSource = arrStatus;
+                        //     that.vmTableList = res;
+                        //     //格式化日期
+                        //     for(var i=0;i<that.vmTableList.DataSource.length;i++){
+                        //         that.vmTableList.DataSource[i].last = window.moment.format(that.vmTableList.DataSource[i].last,"yyyy-MM-dd")
+                        //     }
+                        //     //分页
+                        //     var $pager = $('#pages');
+                        //     $pager.empty();
+                        //     $pager.removeData("twbs-pagination");
+                        //     $pager.unbind("page");
+
+                        //     $pager.twbsPagination({
+                        //         totalPages: res.TotalPages,
+                        //         visiblePages: res.TotalPages > 5 ? 5 : res.TotalPages,
+                        //         startPage: res.PageIndex,
+                        //         initiateStartPageClick: false,
+                        //         onPageClick: function (event, page) {
+                        //             that.search.PageIndex = page;
+                        //             that.selectStatus(str);
+                        //         }
+                        //     });
+                        // })
+                    },
+                    selectCategory:function(name,code){
+                        this.ifCategory = name;
+                        this.selectCategoryCode = code;
+                    },
+                    searchList:function(){
                         var that = this;
                         var arrStatus = [];
-                        window.app.token("/admin/shop/search",{page: that.search.PageIndex,ShopStatus: str},"GET",that.token,function(res){
-                            //寻找status为与点击项对应的所有对象，放入数组
-                            for(var i=0;i<res.DataSource.length;i++){
-                                if(res.DataSource[i].status == str){
-                                    arrStatus.push(res.DataSource[i]);
+                        window.app.token("/admin/shop/search",{page: that.search.PageIndex, name: that.business,hot: that.searchHot,catgeory: that.selectCategoryCode,ShopStatus: that.searchStatus},"GET",that.token,function(res){
+                            console.log(res)
+                            if(that.searchStatus){
+                                //寻找status为与点击项对应的所有对象，放入数组
+                                for(var i=0;i<res.DataSource.length;i++){
+                                    if(res.DataSource[i].status == that.searchStatus){
+                                        arrStatus.push(res.DataSource[i]);
+                                    }
                                 }
+                                //用需要的集合替换请求过来的内容
+                                res.DataSource = arrStatus;
                             }
-                            //用需要的集合替换请求过来的内容
-                            res.DataSource = arrStatus;
                             that.vmTableList = res;
+                            // console.log(that.vmTableList)
                             //格式化日期
                             for(var i=0;i<that.vmTableList.DataSource.length;i++){
                                 that.vmTableList.DataSource[i].last = window.moment.format(that.vmTableList.DataSource[i].last,"yyyy-MM-dd")
@@ -265,7 +332,7 @@
                                 initiateStartPageClick: false,
                                 onPageClick: function (event, page) {
                                     that.search.PageIndex = page;
-                                    that.selectStatus(str);
+                                    that.searchList();
                                 }
                             });
                         })
@@ -333,7 +400,6 @@
                         //请求二级类别
                         window.app.token("/shop/category",{code: "all"},"GET",token,function(res){
                             that.arrCategory = res ;
-                            console.log(that.arrCategory)
                         })
                     }
                 }
