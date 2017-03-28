@@ -13,6 +13,7 @@
     <link href="assets/css/animate.min.css" rel="stylesheet"/>
     <link href="assets/css/light-bootstrap-dashboard.css" rel="stylesheet"/>
     <link href="assets/css/demo.css" rel="stylesheet" />
+    <link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
 </head>
 <body>
 
@@ -50,7 +51,7 @@
                     </a>
                 </li>
                 <li class="active-pro">
-                    <a href="upgrade.html">
+                    <a href="login.html?clear=true">
                         <i class="pe-7s-power"></i>
                         <p>退出</p>
                     </a>
@@ -59,7 +60,7 @@
     	</div>
     </div>
 
-    <div class="main-panel">
+    <div class="main-panel" id="tableTbody">
         <nav class="navbar navbar-default navbar-fixed">
             <div class="container-fluid">
                 <div class="navbar-header">
@@ -75,15 +76,15 @@
                     <ul class="nav navbar-nav navbar-left">
                         <li>
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <input class="table-formInput" type="text" placeholder="输入商家名称" >
+                                <input class="table-formInput" type="text" placeholder="输入商家名称" v-model="business">
                             </a>
                         </li>
                     </ul>
 
                     <ul class="nav navbar-nav navbar-right">
                         <li>
-                           <a href="">
-                                <i class="fa fa-search"></i>
+                           <a>
+                                <i class="fa fa-search" v-on:click="searchList">搜索</i>
                             </a>
                         </li>
                     </ul>
@@ -130,13 +131,24 @@
 
     <!--   Core JS Files   -->
     <script src="assets/js/jquery-1.10.2.js" type="text/javascript"></script>
-    <script src="assets/js/vue-2.1.10.min.js" type="text/javascript"></script>
     <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
-    <script src="assets/js/jquery.twbsPagination.min.js" type="text/javascript" ></script>
     <script src="assets/js/app.moment.js" type="text/javascript"></script>
-    
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/bootstrap-checkbox-radio-switch.js"></script>
+    <script src="assets/js/chartist.min.js"></script>
+    <script src="assets/js/bootstrap-notify.js"></script>
+    <script src="assets/js/light-bootstrap-dashboard.js"></script>
+    <script src="assets/js/jquery.twbsPagination.js"></script>
+    <script src="assets/js/vue-2.1.10.min.js"></script>
+    <script src="assets/js/demo.js"></script>
     <script type="text/javascript">
-        var vm = new Vue({
+        $(document).ready(function(){
+            var token = window.app.getuser();
+            if(token == '' || token == null){
+                window.location.href='login.html';
+                return false;
+            };
+            var vm = new Vue({
               el: '#tableTbody',
               data: {
                 vmTableList:{},
@@ -144,29 +156,58 @@
                 search: {
                     PageIndex: 1,
                     PageSize: 10
-                }
+                },
+                business:'',
+                token:"",
               },
               methods: {
-                    load:function(){
+                    searchList:function(){
                         var that = this;
-                        $.ajax({
-                            url:"http://radar.3vcar.com/admin/task/index",
-                            dataType:"json",
-                            data:{
-                                page : that.search.PageIndex,
-                                approved:'Finish',
-                                expired:0,
-                            },
-                            header:{
-                                'content-type': 'application/json',
-                                'Authorization': "eyJWYWxpZCI6dHJ1ZX0.MjYwMzQxNzY.ZGM4OTVkMTYzZWY0NDc4ODE4ODgzNDc4ZjdmMmYyY2RhMDI4MzJlMw"
-                            },
-                            success: function (data) {
-                                console.log(data);
+                        var arrStatus = [];
+                        window.app.token("/admin/task/index",{page: that.search.PageIndex, name: that.business},"GET",that.token,function(res){
+                            if(that.business){
+                                // 寻找status为与点击项对应的所有对象，放入数组
+                                for(var i=0;i<res.DataSource.length;i++){
+                                    if(res.DataSource[i].name == that.business){
+                                        arrStatus.push(res.DataSource[i]);
+                                    }
+                                }
+                                //用需要的集合替换请求过来的内容
+                                res.DataSource = arrStatus;
+                            }
+                            that.vmTableList = res;
+                            // console.log(that.vmTableList)
+                            //格式化日期
+                            for(var i=0;i<that.vmTableList.DataSource.length;i++){
+                                that.vmTableList.DataSource[i].last = window.moment.format(that.vmTableList.DataSource[i].last,"yyyy-MM-dd")
+                            }
+                            //分页
+                            var $pager = $('#pages');
+                            $pager.empty();
+                            $pager.removeData("twbs-pagination");
+                            $pager.unbind("page");
+
+                            $pager.twbsPagination({
+                                totalPages: res.TotalPages,
+                                visiblePages: res.TotalPages > 5 ? 5 : res.TotalPages,
+                                startPage: res.PageIndex,
+                                initiateStartPageClick: false,
+                                onPageClick: function (event, page) {
+                                    that.search.PageIndex = page;
+                                    that.searchList();
+                                }
+                            });
+                        })
+                    },
+                    load:function(token){
+                        var that = this;
+                        window.app.token("/admin/task/index",{page : that.search.PageIndex,
+                            approved:'Finish',
+                            expired:0,},"GET",that.token,function(data){
                                 vm.$data.vmTableList = data;
                                 //格式化日期
                                 for(var i=0;i<vm.$data.vmTableList.DataSource.length;i++){
-                                    vm.$data.vmTableList.DataSource[i].expired = window.moment.format(vm.$data.vmTableList.DataSource[i].expired,"yyyy-MM-dd")
+                                    vm.$data.vmTableList.DataSource[i].last = window.moment.format(vm.$data.vmTableList.DataSource[i].last,"yyyy-MM-dd")
                                 }
                                 //分页
                                 var $pager = $('#pages');
@@ -184,15 +225,33 @@
                                         that.load();
                                     }
                                 });
+                            vm.$data.vmTableList = data;
+                            //格式化日期
+                            for(var i=0;i<vm.$data.vmTableList.DataSource.length;i++){
+                                vm.$data.vmTableList.DataSource[i].last = window.moment.format(vm.$data.vmTableList.DataSource[i].last,"yyyy-MM-dd")
                             }
-                    
+                            //分页
+                            var $pager = $('#pages');
+                            $pager.empty();
+                            $pager.removeData("twbs-pagination");
+                            $pager.unbind("page");
+
+                            $pager.twbsPagination({
+                                totalPages: data.TotalPages,
+                                visiblePages: data.TotalPages > 5 ? 5 : data.TotalPages,
+                                startPage: data.PageIndex,
+                                initiateStartPageClick: false,
+                                onPageClick: function (event, page) {
+                                    that.search.PageIndex = page;
+                                    that.load();
+                                }
+                            });
                         });
                     }
                 }
             });
-            $(document).ready(function(){
-                vm.load();
-            })
+            vm.load(token);
+        })
     </script>
 
 </html>

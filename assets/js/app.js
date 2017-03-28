@@ -94,14 +94,14 @@
             url:"http://radar.3vcar.com" + url,
             data:data,
             dataType:'json',
-            type:type,
+            method:type,
             timeout:10000,
             headers:{
                 'content-type': 'application/json',
-                'Authorization':token,
+                'Authorization':token
             },
-            success:success,
-        })
+            success:success
+        });
     }
 
 

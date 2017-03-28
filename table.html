@@ -51,7 +51,7 @@
                     </a>
                 </li>
 				<li class="active-pro">
-                    <a href="upgrade.html">
+                    <a href="login.html?clear=true">
                         <i class="pe-7s-power"></i>
                         <p>退出</p>
                     </a>
@@ -66,14 +66,14 @@
                 <div class="navbar-header">
                 </div>
                 <div class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav navbar-left">
-                        <li>
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <ul class="nav navbar-nav navbar-left" >
+                        <li class="col-md-6">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="margin:4px 3px;">
                                 <input class="table-formInput" v-model="business" type="text" placeholder="输入公司名称" >
                             </a>
                         </li>
                     </ul>
-                    <ul class="nav navbar-nav navbar-right">
+                    <ul class="nav navbar-nav navbar-right col-md-6">
                         <li class="dropdown">
                               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                     {{ifhot}}
@@ -166,7 +166,7 @@
                                             <td v-if="item.status == 'Authenticated'">已认证</td>
                                             <td v-if="item.status == 'NoPass'">未通过</td>
                                             <td v-if="item.status == 'None'">无</td>
-                                        	<td v-on:click="deleteItem(item.code)"><a>删除</a></td>
+                                        	<td v-on:click="deleteItem(item.code)"><a href="javascript:void(0)">删除</a></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -196,7 +196,7 @@
     <script src="assets/js/vue-2.1.10.min.js"></script>
 	<script src="assets/js/demo.js"></script>
     <script type="text/javascript">
-            var vm = new Vue({
+        var vm = new Vue({
               el: '#tableTbody',
               data: {
                 vmTableList:{},
@@ -225,29 +225,6 @@
                             this.ifhot = "未推广";
                             this.searchHot = "no";
                         }
-                        // window.app.token("/admin/shop/search",{page : that.search.PageIndex,hot: bol},"GET",that.token,function(res){
-                        //         that.vmTableList = res;
-                        //         //格式化日期
-                        //         for(var i=0;i<that.vmTableList.DataSource.length;i++){
-                        //             that.vmTableList.DataSource[i].last = window.moment.format(that.vmTableList.DataSource[i].last,"yyyy-MM-dd")
-                        //         }
-                        //         //分页
-                        //         var $pager = $('#pages');
-                        //         $pager.empty();
-                        //         $pager.removeData("twbs-pagination");
-                        //         $pager.unbind("page");
-
-                        //         $pager.twbsPagination({
-                        //             totalPages: res.TotalPages,
-                        //             visiblePages: res.TotalPages > 5 ? 5 : res.TotalPages,
-                        //             startPage: res.PageIndex,
-                        //             initiateStartPageClick: false,
-                        //             onPageClick: function (event, page) {
-                        //                 that.search.PageIndex = page;
-                        //                 that.selectHot(bol);
-                        //             }
-                        //         });
-                        // })
                     },
                     selectStatus:function(str){
                         if(str == "Authenticated"){
@@ -260,39 +237,6 @@
                             this.ifStatus = "未通过";
                             this.searchStatus = "NoPass";
                         }
-                        // var that = this;
-                        // var arrStatus = [];
-                        // window.app.token("/admin/shop/search",{page: that.search.PageIndex,ShopStatus: str},"GET",that.token,function(res){
-                        //     //寻找status为与点击项对应的所有对象，放入数组
-                        //     for(var i=0;i<res.DataSource.length;i++){
-                        //         if(res.DataSource[i].status == str){
-                        //             arrStatus.push(res.DataSource[i]);
-                        //         }
-                        //     }
-                        //     //用需要的集合替换请求过来的内容
-                        //     res.DataSource = arrStatus;
-                        //     that.vmTableList = res;
-                        //     //格式化日期
-                        //     for(var i=0;i<that.vmTableList.DataSource.length;i++){
-                        //         that.vmTableList.DataSource[i].last = window.moment.format(that.vmTableList.DataSource[i].last,"yyyy-MM-dd")
-                        //     }
-                        //     //分页
-                        //     var $pager = $('#pages');
-                        //     $pager.empty();
-                        //     $pager.removeData("twbs-pagination");
-                        //     $pager.unbind("page");
-
-                        //     $pager.twbsPagination({
-                        //         totalPages: res.TotalPages,
-                        //         visiblePages: res.TotalPages > 5 ? 5 : res.TotalPages,
-                        //         startPage: res.PageIndex,
-                        //         initiateStartPageClick: false,
-                        //         onPageClick: function (event, page) {
-                        //             that.search.PageIndex = page;
-                        //             that.selectStatus(str);
-                        //         }
-                        //     });
-                        // })
                     },
                     selectCategory:function(name,code){
                         this.ifCategory = name;
@@ -344,10 +288,6 @@
                         if(!tips){
                             return ;
                         }else{
-                            // 这段用不了
-                            // window.app.token("/admin/shop/delete/",{code : e},"POST",that.token,function(res){
-                            //     console.log(res)
-                            // });
                             $.ajax({
                                 url:"http://radar.3vcar.com/admin/shop/delete",
                                 type:"POST",
@@ -404,17 +344,14 @@
                     }
                 }
             });
-            $(document).ready(function(){
-                //判断token
-                // var token = localStorage.getItem('token');
-                var token = "eyJWYWxpZCI6dHJ1ZX0.MjYwMzQxNzY.ZGM4OTVkMTYzZWY0NDc4ODE4ODgzNDc4ZjdmMmYyY2RhMDI4MzJlMw"
-                vm.load(token);
-                // if(token){
-                //     vm.load();
-                // }else{
-                //     alert("您还未登录");
-                //     window.location.href = "./login.html"
-                // }
+        $(document).ready(function(){
+            var token = window.app.getuser();
+            if(token == '' || token == null){
+                window.location.href='login.html';
+                return false;
+            };
+            
+            vm.load(token);
             })
 
     </script>

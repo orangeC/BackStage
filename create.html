@@ -48,7 +48,7 @@
                     </a>
                 </li>
                 <li class="active-pro">
-                    <a href="upgrade.html">
+                    <a href="login.html?clear=true">
                         <i class="pe-7s-rocket"></i>
                         <p>退出</p>
                     </a>
@@ -91,35 +91,27 @@
 </div>
 </body>
     <script src="assets/js/jquery-1.10.2.js" type="text/javascript"></script>
-	<script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
-	<script src="assets/js/bootstrap-checkbox-radio-switch.js"></script>
-	<script src="assets/js/chartist.min.js"></script>
-    <script src="assets/js/bootstrap-notify.js"></script>
-	<script src="assets/js/light-bootstrap-dashboard.js"></script>
-	<script src="assets/js/demo.js"></script>
+    <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="assets/js/bootstrap-checkbox-radio-switch.js"></script>
+    <script src="assets/js/chartist.min.js"></script>
+    <script src="assets/js/light-bootstrap-dashboard.js"></script>
+    <script src="assets/js/demo.js"></script>
     <script src='assets/js/vue-2.1.10.min.js'></script>
     <script src="assets/js/app.js"></script>
     <script type="text/javascript">
         $(document).ready(function(){
+            var token = window.app.getuser();
             var code = window.app.getQueryString('code');
-            $.ajax({
-                url:'http://radar.3vcar.com/shop/category',
-                data:{
-                    code:'',
-                },
-                dataType:'json',
-                type:'GET',
-                header:{
-                    'content-type': 'application/json',
-                    'Authorization': "eyJFeHBpcmVkTWludXRlcyI6IlwvRGF0ZSgyNTM0MDIyNzE5OTk5OTkpXC8iLCJUeXBlIjoiSldUIiwiQWxnb3JpdGhtIjowfQ.MjYwMzQxNzY.ODkzOTAxNDI1MTdmMzEwODMwZTkzOGJhY2RjZGUwOTE3M2JmYzI5Zg"
-                },
-                success(res){
-                    for (var i = 0; i < res.length; i++) {
-                        if (code == res[i].code) {
-                            vm.$data.selected = res[i].name;
-                        };
+            if(token == '' || token == null){
+                window.location.href='login.html';
+                return false;
+            };
+            window.app.token('/shop/category',{code:'',},'GET',token,function(res){
+                for (var i = 0; i < res.length; i++) {
+                    if (code == res[i].code) {
+                        vm.$data.selected = res[i].name;
                     };
-                },
+                };
             });
             var vm = new Vue({
                 el:'#creat',
@@ -139,7 +131,7 @@
                             type:'POST',
                             header:{
                                 'content-type': 'application/json',
-                                'Authorization': "eyJFeHBpcmVkTWludXRlcyI6IlwvRGF0ZSgyNTM0MDIyNzE5OTk5OTkpXC8iLCJUeXBlIjoiSldUIiwiQWxnb3JpdGhtIjowfQ.MjYwMzQxNzY.ODkzOTAxNDI1MTdmMzEwODMwZTkzOGJhY2RjZGUwOTE3M2JmYzI5Zg"
+                                'Authorization': token
                             },
                             success:function(res){
                                 if (res){

@@ -26,7 +26,7 @@
             <ul class="nav">
                 <li>
                     <a href="index.html">
-                        <i class="pe-7s-graph"></i>
+                        <i class="pe-7s-home"></i>
                         <p>首页</p>
                     </a>
                 </li>
@@ -44,13 +44,13 @@
                 </li>
                 <li>
                     <a href="typography.html">
-                        <i class="pe-7s-news-paper"></i>
+                        <i class="pe-7s-graph"></i>
                         <p>数据统计</p>
                     </a>
                 </li>
                 <li class="active-pro">
-                    <a href="upgrade.html">
-                        <i class="pe-7s-rocket"></i>
+                    <a href="login.html?clear=true">
+                        <i class="pe-7s-power"></i>
                         <p>退出</p>
                     </a>
                 </li>
@@ -59,42 +59,7 @@
     </div>
 
     <div class="main-panel">
-        <nav class="navbar navbar-default navbar-fixed" style="background-color:#f8f8f8;border-bottom: none;">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    
-                </div>
-                <div class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav navbar-left">
-                        <li>
-                            
-                        </li>
-                        <li class="dropdown">
-                              
-                        </li>
-                        <li>
-                           
-                        </li>
-                    </ul>
-
-                    <ul class="nav navbar-nav navbar-right">
-                        <li>
-                           
-                        </li>
-                        <li class="dropdown">
-                              
-                        </li>
-                        <li>
-                            <a href="#" style="color: #f8f8f8;">
-                                占位
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-
+        <nav class="navbar navbar-default navbar-fixed" style="background-color:#f8f8f8;border-bottom: none;"></nav>
         <div class="content" id="detailsForm">
             <div class="container-fluid">
                 <div class="row">
@@ -205,107 +170,83 @@
     <script src="assets/js/vue-2.1.10.min.js"></script>
     <script src="assets/js/demo.js"></script>
     <script type="text/javascript">
-
-        var vm = new Vue({
-          el: '#detailsForm',
-          data: {
-            items: [],
-            radio:false,
-            picked:"",
-            number: 1,
-            author:""
-          },
-            methods: {
-                    onSubmit:function(e){
-                        var tips = confirm('是否提交');
-                        if(!tips){
-                            return ;
-                        }else{
-                            // window.app.token(
-                            //     "/admin/shop/approval",
-                            //     {
-                            //         code: this.items[0].code,
-                            //         status: this.picked,
-                            //         expired : this.items[0].expired,
-                            //         hot :this.items[0].hot,
-                            //         comment : this.items[0].comment
-                            //     },
-                            //     "POST",
-                            //     this.token,
-                            //     function(res){
-                            //         if(res.Success){
-                            //             window.location.href = "./table.html"
-                            //         }else{
-                            //             alert("失败")
-                            //         }
-                            //     })
-                            $.ajax({
-                                url:"http://radar.3vcar.com/admin/shop/approval",
-                                dataType:"json",
-                                type:"POST",
-                                data:{
-                                    code: this.items[0].code,
-                                    status: this.picked,
-                                    expired : this.items[0].expired,
-                                    hot :this.items[0].hot,
-                                    comment : this.items[0].comment
-                                },
-                                header:{
-                                    'content-type': 'application/json',
-                                    'Authorization': this.token
-                                },
-                                success: function (data) {
-                                    console.log(data);
-                                    if(data.Success){
-                                        window.location.href = "./table.html"
-                                    }else{
-						              	alert("失败")
+        $(document).ready(function(){
+            var token = window.app.getuser();
+            if(token == '' || token == null){
+                window.location.href='login.html';
+                return false;
+            };            
+            var vm = new Vue({
+              el: '#detailsForm',
+              data: {
+                items: [],
+                radio:false,
+                picked:"",
+                number: 1,
+                author:""
+              },
+                methods: {
+                        onSubmit:function(e){
+                            var tips = confirm('是否提交');
+                            if(!tips){
+                                return ;
+                            }else{
+                                $.ajax({
+                                    url:"http://radar.3vcar.com/admin/shop/approval",
+                                    dataType:"json",
+                                    type:"POST",
+                                    data:{
+                                        code: this.items[0].code,
+                                        status: this.picked,
+                                        expired : this.items[0].expired,
+                                        hot :this.items[0].hot,
+                                        comment : this.items[0].comment
+                                    },
+                                    header:{
+                                        'content-type': 'application/json',
+                                        'Authorization': this.token
+                                    },
+                                    success: function (data) {
+                                        console.log(data);
+                                        if(data.Success){
+                                            window.location.href = "./table.html"
+                                        }else{
+    						              	alert("失败")
+                                        }
                                     }
+                                });
+                            }
+                            
+                        },
+                        load:function(token){
+                            var that = this;
+                            var dataCode = window.app.getQueryString("code");
+                            that.token = token;
+                            window.app.token("/admin/shop/view",{code: dataCode},"GET",token,function(res){
+                                that.items.push(res);
+                                that.items[0].expired = window.moment.format(that.items[0].expired,"yyyy-MM-dd");
+                                that.items[0].last = window.moment.format(that.items[0].last,"yyyy年MM月dd日");
+                                //根据状态设置通过复选框
+                                if(that.items[0].status == "Authenticated"){
+                                    that.picked = "Authenticated"
+                                }else if(that.items[0].status == "NoPass"){
+                                    that.picked = "NoPass"
                                 }
-                            });
+                                var thatStatus = {
+                                  "Authenticating": "认证中",
+                                  "Authenticated": "已认证",
+                                  "NoPass": "未通过",
+                                  "None": "无"
+                                }
+                                that.author = thatStatus[that.items[0].status];
+                                that.$nextTick(function () {
+                                    $(".calendar").flatpickr();  
+                                });
+                            })
                         }
-                        
-                    },
-                    load:function(token){
-                        var that = this;
-                        var dataCode = window.app.getQueryString("code");
-                        that.token = token;
-                        window.app.token("/admin/shop/view",{code: dataCode},"GET",token,function(res){
-                            that.items.push(res);
-                            that.items[0].expired = window.moment.format(that.items[0].expired,"yyyy-MM-dd");
-                            that.items[0].last = window.moment.format(that.items[0].last,"yyyy年MM月dd日");
-                            //根据状态设置通过复选框
-                            if(that.items[0].status == "Authenticated"){
-                                that.picked = "Authenticated"
-                            }else if(that.items[0].status == "NoPass"){
-                                that.picked = "NoPass"
-                            }
-                            var thatStatus = {
-                              "Authenticating": "认证中",
-                              "Authenticated": "已认证",
-                              "NoPass": "未通过",
-                              "None": "无"
-                            }
-                            that.author = thatStatus[that.items[0].status];
-                            that.$nextTick(function () {
-                                $(".calendar").flatpickr();  
-                            });
-                        })
                     }
-                }
-        })
-        $("body").ready(function(){
-            //判断token
-            // var token = localStorage.getItem('token');
-            var token = "eyJWYWxpZCI6dHJ1ZX0.MjYwMzQxNzY.ZGM4OTVkMTYzZWY0NDc4ODE4ODgzNDc4ZjdmMmYyY2RhMDI4MzJlMw"
+            })
             vm.load(token);
-            // if(token){
-            //     vm.load();
-            // }else{
-            //     alert("您还未登录");
-            //     window.location.href = "./login.html"
-            // }
-
         })
     </script>
 </body>

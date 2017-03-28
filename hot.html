@@ -50,7 +50,7 @@
                     </a>
                 </li>
                 <li class="active-pro">
-                    <a href="login.html">
+                    <a href="login.html?clear=true">
                         <i class="pe-7s-power"></i>
                         <p>退出</p>
                     </a>
@@ -106,29 +106,20 @@
 	<script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
 	<script src="assets/js/bootstrap-checkbox-radio-switch.js"></script>
 	<script src="assets/js/chartist.min.js"></script>
-    <script src="assets/js/bootstrap-notify.js"></script>
 	<script src="assets/js/light-bootstrap-dashboard.js"></script>
 	<script src="assets/js/demo.js"></script>
     <script src='assets/js/vue-2.1.10.min.js'></script>
     <script src="assets/js/app.js"></script>
     <script type="text/javascript">        
         $(document).ready(function(){
-            var token = localStorage.getItem('token');
+            var token = window.app.getuser();
             var code = window.app.getQueryString('code');
-            $.ajax({
-                url:'http://radar.3vcar.com/admin/hot/search',
-                data:{
-                    category:code,
-                },
-                dataType:'json',
-                type:'GET',
-                header:{
-                    'content-type': 'application/json',
-                    'Authorization': token
-                },
-                success:function(res){
-                    vm.$data.list = res;
-                }
+            if(token == '' || token == null){
+                window.location.href='login.html';
+                return false;
+            };
+            window.app.token('/admin/hot/search',{category:code,},'GET',token,function(res){
+                vm.$data.list = res;
             });
             var vm = new Vue({
                 el:'#list',
@@ -172,7 +163,7 @@
                             success:function(res){
                                 if (res.Success) {
                                     for (var i = 0; i < list.length; i++) {
-                                        if (shopCode = list[i].code) {
+                                        if (list[i].code = shopCode) {
                                             list.splice(i,1);
                                         };
                                     };
@@ -182,7 +173,7 @@
                         })
                     }
                 }
-            });   
+            }); 
         });    
     </script>
 </html>
