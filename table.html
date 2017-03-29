@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width" />
     <title>商家列表</title>
-    <link rel="icon" type="image/png" href="assets/img/favicon.ico">
+    <link rel="icon" type="image/png" href="assets/img/logo.ico">
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
     <link href="assets/css/animate.min.css" rel="stylesheet"/>
     <link href="assets/css/light-bootstrap-dashboard.css" rel="stylesheet"/>
@@ -66,93 +66,87 @@
                 <div class="navbar-header">
                 </div>
                 <div class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav navbar-left" >
-                        <li class="col-md-6">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="margin:4px 3px;">
-                                <input class="table-formInput" v-model="business" type="text" placeholder="输入公司名称" >
-                            </a>
+                    <ul class="nav navbar-nav navbar-left col-md-12">
+                        <li class="col-md-5">
+                                <input class="form-control" v-model="business" type="text" placeholder="输入公司名称" style="margin:15px 3px">
                         </li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right col-md-6">
                         <li class="dropdown">
-                              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    {{ifhot}}
-                                    <b class="caret"></b>
-                              </a>
-                              <ul class="dropdown-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                {{ifhot}}
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a v-on:click="selectHot">全部</a></li>
                                 <li><a v-on:click="selectHot('yes')">推广</a></li>
                                 <li><a v-on:click="selectHot('no')">未推广</a></li>
-                              </ul>
+                            </ul>
                         </li>
                         <li class="dropdown">
-                              <a href="#myModal1" class="dropdown-toggle" data-target="#myModal1" data-toggle="modal">
-                                    {{ifArea}}
-                                    <b class="caret"></b>
-                              </a>
-                                <div id="myModal1" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
-                                  <div class="modal-dialog">
+                            <a href="#myModal1" class="dropdown-toggle" data-target="#myModal1" data-toggle="modal">
+                                {{ifArea}}
+                                <b class="caret"></b>
+                            </a>
+                            <div id="myModal1" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+                                <div class="modal-dialog">
                                     <div class="modal-content">
-                                      <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                        <h4 class="modal-title" id="myModalLabel">请选择服务区域</h4>
-                                      </div>
-                                      <div class="modal-body">
-                                        <form class="form-inline">
-                                          <div id="distpicker1">
-                                            <div class="form-group">
-                                              <label class="sr-only" for="province4">Province</label>
-                                              <select class="form-control" id="province4"></select>
-                                            </div>
-                                            <div class="form-group">
-                                              <label class="sr-only" for="city4">City</label>
-                                              <select class="form-control" id="city4"></select>
-                                            </div>
-                                            <div class="form-group">
-                                              <label class="sr-only" for="district4">District</label>
-                                              <select class="form-control" id="district4" v-model="selected"></select>
-                                            </div>
-                                          </div>
-                                        </form>
-                                      </div>
-                                      <div class="modal-footer">
-                                        <button class="btn btn-default" data-dismiss="modal" v-on:click="selectArea" aria-hidden="true">确认</button>
-                                        
-                                      </div>
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                            <h4 class="modal-title" id="myModalLabel">请选择服务区域</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form class="form-inline">
+                                                <div id="distpicker1" >
+                                                    <div class="form-group">
+                                                        <label class="sr-only" ></label>
+                                                        <select v-on:change="change" class="form-control" v-model="cityed">
+                                                            <option v-for="item in arrCitys">{{item}}</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="sr-only" ></label>
+                                                        <select class="form-control" v-model="selected">
+                                                            <option v-for="items in arrCitysTwo" selected="全部区域">{{items}}</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-default" data-dismiss="modal" v-on:click="selectArea" aria-hidden="true">确认</button>
+                                        </div>
                                     </div>
-                                  </div>
                                 </div>
+                            </div>
                         </li>
                         <li class="dropdown" >
-                              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    {{ifCategory}}
-                                    <b class="caret"></b>
-                              </a>
-                              <ul class="dropdown-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                {{ifCategory}}
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a v-on:click="selectCategory">全部</a></li>
                                 <li v-for="item in arrCategory"><a v-on:click="selectCategory(item.name,item.code)" href="#">{{item.name}}</a></li>
-                              </ul>
+                            </ul>
                         </li>
                         <li class="dropdown">
-                              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    {{ifStatus}}
-                                    <b class="caret"></b>
-                              </a>
-                              <ul class="dropdown-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                {{ifStatus}}
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a v-on:click="selectStatus">全部</a></li>
                                 <li><a v-on:click="selectStatus('Authenticated')">已通过</a></li>
                                 <li><a v-on:click="selectStatus('Authenticating')">认证中</a></li>
                                 <li><a v-on:click="selectStatus('NoPass')">未通过</a></li>
-                              </ul>
+                            </ul>
                         </li>
                         <li>
-                           <a>
-                                <i class="fa fa-search" v-on:click="searchList">搜索</i>
-                            </a>
+                            <button v-on:click="searchList" type="button" class="btn btn-info">搜索</button>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
-
-
         <div class="content">
             <div class="container-fluid">
                 <div class="row">
@@ -189,7 +183,7 @@
                                             <td v-if="item.status == 'Authenticated'">已认证</td>
                                             <td v-if="item.status == 'NoPass'">未通过</td>
                                             <td v-if="item.status == 'None'">无</td>
-                                        	<td ><a v-on:click="passItem(item.code)" href="javascript:void(0)">认证</a>&nbsp;&nbsp;&nbsp;&nbsp;<a v-on:click="deleteItem(item.code)" href="javascript:void(0)">删除</a></td>
+                                        	<td ><a v-bind:href="'./details.html?code='+item.code">认证</a>&nbsp;&nbsp;&nbsp;&nbsp;<a v-on:click="deleteItem(item.code)" href="javascript:void(0)">删除</a></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -202,15 +196,14 @@
         <div class="table-footer">
             <ul class="pagination" id="pages"></ul>
         </div>
-
     </div>
 </div>
-
 </body>
     <script src="assets/js/jquery-1.10.2.js" type="text/javascript"></script>
     <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
 	<script src="assets/js/app.moment.js" type="text/javascript"></script>
     <script src="assets/js/app.js"></script>
+    <script src="assets/js/app.auto.js"></script>
 	<script src="assets/js/bootstrap-checkbox-radio-switch.js"></script>
 	<script src="assets/js/chartist.min.js"></script>
     <script src="assets/js/bootstrap-notify.js"></script>
@@ -220,41 +213,69 @@
 	<script src="assets/js/demo.js"></script>
     <script src='assets/js/velocity.min.js'></script> 
     <script src='assets/js/velocity.ui.min.js'></script> 
-    <script src="assets/js/distpicker.data.js"></script>
-    <script src="assets/js/distpicker.js"></script>
-    <script src="assets/js/main.js"></script>
+    <!-- <script src="assets/js/distpicker.data.js"></script> -->
+    <!-- <script src="assets/js/distpicker.js"></script> -->
+    <!-- <script src="assets/js/main.js"></script> -->
     <script type="text/javascript">
-        var vm = new Vue({
-              el: '#tableTbody',
-              data: {
-                vmTableList:{},
-                // 搜索条件
-                search: {
-                    PageIndex: 1,
-                    PageSize: 10
+        $(document).ready(function(){
+            var token = window.app.getuser();
+            if(token == '' || token == null){
+                window.location.href='login.html';
+                return false;
+            };
+            var arrCitys = window.apps.getCitys();
+            var vm = new Vue({
+                el: '#tableTbody',
+                  data: {
+                    vmTableList:{},
+                    // 搜索条件
+                    search: {
+                        PageIndex: 1,
+                        PageSize: 10
+                    },
+                    token:"",
+                    business:"",
+                    ifhot:"营销推广",
+                    searchHot:"",
+                    ifArea:"服务区域",
+                    searchArea:"",
+                    ifCategory:"服务类别",
+                    searchCategory:"",
+                    selectCategoryCode:"",
+                    ifStatus:"审核状态",
+                    searchStatus:"",
+                    arrCategory:[],
+                    selected:"",
+                    cityed:"",
+                    arrCitys:[],
+                    arrCitysTwo:[]
                 },
-                token:"",
-                business:"",
-                ifhot:"营销推广",
-                searchHot:"",
-                ifArea:"服务区域",
-                searchArea:"",
-                ifCategory:"服务类别",
-                searchCategory:"",
-                selectCategoryCode:"",
-                ifStatus:"审核状态",
-                searchStatus:"",
-                arrCategory:[],
-                selected:""
-              },
-              methods: {
+                methods: {
+                    change:function(){
+                        var that = this;
+                        that.arrCitysTwo = [];
+                        that.arrCitysTwo[0] = "全部区域"
+                        for(var i=0;i<arrCitys.length;i++){
+                            if(arrCitys[i].name == that.cityed){
+                                for(var j=0;j<arrCitys.length;j++){
+                                    if(arrCitys[i].code == arrCitys[j].parent){
+                                        that.arrCitysTwo.push(arrCitys[j].name)
+                                    }
+                                }
+                                break ;
+                            }
+                        }
+                    },
                     selectHot:function(bol){
                         if(bol == "yes"){
                             this.ifhot = "推广";
                             this.searchHot = "yes";
-                        }else{
+                        }else if(bol == "no"){
                             this.ifhot = "未推广";
                             this.searchHot = "no";
+                        }else{
+                            this.ifhot = "全部";
+                            this.searchHot = "";
                         }
                     },
                     selectStatus:function(str){
@@ -264,27 +285,37 @@
                         }else if(str == "Authenticating"){
                             this.ifStatus = "认证中";
                             this.searchStatus = "Authenticating";
-                        }else{
+                        }else if(str == "NoPass"){
                             this.ifStatus = "未通过";
                             this.searchStatus = "NoPass";
+                        }else{
+                            this.ifStatus = "全部";
+                            this.searchStatus = "";
                         }
                     },
                     selectCategory:function(name,code){
-                        this.ifCategory = name;
-                        this.selectCategoryCode = code;
+                        if(name && code){
+                            this.ifCategory = name;
+                            this.selectCategoryCode = code;
+                        }else{
+                            this.ifCategory = "全部";
+                            this.selectCategoryCode = "";
+                        }
                     },
                     selectArea:function(){
-                        console.log(this.selected)
-                        if(!this.selected){
-                            this.ifArea = "服务区域";
+                        if(this.selected == "全部区域" || this.selected == ""){
+                            
+                            this.ifArea = this.cityed;
+                            this.searchArea = this.cityed;
                         }else{
                             this.ifArea = this.selected;
+                            this.searchArea = this.selected;
                         }
                     },
                     searchList:function(){
                         var that = this;
                         var arrStatus = [];
-                        window.app.token("/admin/shop/search",{page: that.search.PageIndex, name: that.business,hot: that.searchHot,catgeory: that.selectCategoryCode,ShopStatus: that.searchStatus},"GET",that.token,function(res){
+                        window.app.token("/admin/shop/search",{page: that.search.PageIndex, name: that.business,hot: that.searchHot, scope: that.searchArea ,catgeory: that.selectCategoryCode,ShopStatus: that.searchStatus},"GET",that.token,function(res){
                             console.log(res)
                             if(that.searchStatus){
                                 //寻找status为与点击项对应的所有对象，放入数组
@@ -320,31 +351,6 @@
                             });
                         })
                     },
-                    passItem:function(e){
-                        var that = this;
-                        var tips = confirm('是否认证');
-                        var arrTable = this.vmTableList.DataSource;
-                        if(!tips){
-                            return ;
-                        }else{
-                            $.ajax({
-                                    url:"http://radar.3vcar.com/admin/shop/approval",
-                                    dataType:"json",
-                                    type:"POST",
-                                    data:{
-                                        code: e,
-                                        status: "Authenticated"
-                                    },
-                                    header:{
-                                        'content-type': 'application/json',
-                                        'Authorization': this.token
-                                    },
-                                    success: function (data) {
-                                        console.log(data);
-                                    }
-                                });
-                        }
-                    },
                     deleteItem:function(e){
                         var that = this;
                         var tips = confirm('是否删除');
@@ -358,9 +364,8 @@
                                 data:{
                                     code:e
                                 },
-                                header:{
-                                    'content-type': 'application/json',
-                                    'Authorization': that.token
+                                beforeSend:function(xhr){
+                                    xhr.setRequestHeader('Authorization', token);
                                 },
                                 success: function () {
                                     //删除操作
@@ -405,16 +410,14 @@
                         window.app.token("/shop/category",{code: "all"},"GET",token,function(res){
                             that.arrCategory = res ;
                         })
+                        for(var i=0;i<arrCitys.length;i++){
+                            if(arrCitys[i].category == "City"){
+                                that.arrCitys.push(arrCitys[i].name);
+                            }
+                        }
                     }
                 }
             });
-        $(document).ready(function(){
-            var token = window.app.getuser();
-            if(token == '' || token == null){
-                window.location.href='login.html';
-                return false;
-            };
-            
             vm.load(token);
                 $(".modal").each(function(index) {
                   $(this).on('show.bs.modal', function(e) {
@@ -437,7 +440,7 @@
                   
                   });
             })
-                });
+        });
     </script>
 
 

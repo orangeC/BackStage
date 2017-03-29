@@ -6,9 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/png" href="assets/img/favicon.ico">
-
-    <!--  CSS   -->
+    <link rel="icon" type="image/png" href="assets/img/logo.ico">
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
     <link href="assets/css/animate.min.css" rel="stylesheet"/>
     <link href="assets/css/light-bootstrap-dashboard.css" rel="stylesheet"/>
@@ -16,7 +14,6 @@
     <link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
 </head>
 <body>
-
 <div class="wrapper">
     <div class="sidebar" data-color="blue" data-image="assets/img/sidebar-4.jpg">
     	<div class="sidebar-wrapper">
@@ -59,36 +56,20 @@
             </ul>
     	</div>
     </div>
-
     <div class="main-panel" id="tableTbody">
         <nav class="navbar navbar-default navbar-fixed">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <!-- <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="#">Table List</a> -->    
+            <div class="content">
+                <div class="navbar-header" style="color: #ffffff">
+                占
                 </div>
-                <div class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav navbar-left">
-                        <li>
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <input class="table-formInput" type="text" placeholder="输入商家名称" v-model="business">
-                            </a>
-                        </li>
-                    </ul>
-
-                    <ul class="nav navbar-nav navbar-right">
-                        <li>
-                           <a>
-                                <i class="fa fa-search" v-on:click="searchList">搜索</i>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+                <form class="form-horizontal">
+                  <div class="form-group">
+                    <div class="col-sm-10" style="margin-top: 15px;margin-left: 30px">
+                      <input type="text" placeholder="输入商家名称" v-model="business" class="form-control" data-toggle="dropdown">
+                    </div>
+                    <button v-on:click="searchList" type="button" class="btn btn-info">搜索</button>
+                  </div>
+                </form>
             </div>
         </nav>
         <div class="content">
@@ -98,15 +79,15 @@
                         <div class="card">
                             <div class="header">
                                 <h4 class="title">审核认证</h4>
-                                <p class="category">30天内到期商家列表</p>
+                                <p class="category">需要审核认证的商家列表</p>
                             </div>
                             <div class="content table-responsive table-full-width" id="vmStore" >
                                 <table class="table table-hover table-striped" style="text-align: center">
                                     <th style="text-align: center">编码</th>
                                 	<th style="text-align: center">商家名称</th>
                                 	<th style="text-align: center">截止日期</th>
-                                    <tbody id="tableTbody">
-                                        <tr v-for="vm in vmTableList.DataSource">
+                                    <tbody>
+                                        <tr v-for="vm in vmTableList">
                                             <td>{{vm.code}}</td>
                                             <td><a v-bind:href="'./details.html?code='+vm.code">{{vm.name}}</a></td>
                                             <td>{{vm.last}}</td>
@@ -119,21 +100,16 @@
                             </div>
                         </div>
                     </div>
-                    
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
 </body>
-
-    <!--   Core JS Files   -->
     <script src="assets/js/jquery-1.10.2.js" type="text/javascript"></script>
     <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
-    <script src="assets/js/app.moment.js" type="text/javascript"></script>
     <script src="assets/js/app.js"></script>
+    <script src="assets/js/app.moment.js" type="text/javascript"></script>
     <script src="assets/js/bootstrap-checkbox-radio-switch.js"></script>
     <script src="assets/js/chartist.min.js"></script>
     <script src="assets/js/bootstrap-notify.js"></script>
@@ -158,63 +134,32 @@
                     PageSize: 10
                 },
                 business:'',
-                token:"",
+                token:""
               },
               methods: {
-                    searchList:function(){
-                        var that = this;
-                        var arrStatus = [];
-                        window.app.token("/admin/task/index",{page: that.search.PageIndex, name: that.business},"GET",that.token,function(res){
-                            if(that.business){
-                                // 寻找status为与点击项对应的所有对象，放入数组
-                                for(var i=0;i<res.DataSource.length;i++){
-                                    if(res.DataSource[i].name == that.business){
-                                        arrStatus.push(res.DataSource[i]);
-                                    }
-                                }
-                                //用需要的集合替换请求过来的内容
-                                res.DataSource = arrStatus;
-                            }
-                            that.vmTableList = res;
-                            // console.log(that.vmTableList)
-                            //格式化日期
-                            for(var i=0;i<that.vmTableList.DataSource.length;i++){
-                                that.vmTableList.DataSource[i].last = window.moment.format(that.vmTableList.DataSource[i].last,"yyyy-MM-dd")
-                            }
-                            //分页
-                            var $pager = $('#pages');
-                            $pager.empty();
-                            $pager.removeData("twbs-pagination");
-                            $pager.unbind("page");
-
-                            $pager.twbsPagination({
-                                totalPages: res.TotalPages,
-                                visiblePages: res.TotalPages > 5 ? 5 : res.TotalPages,
-                                startPage: res.PageIndex,
-                                initiateStartPageClick: false,
-                                onPageClick: function (event, page) {
-                                    that.search.PageIndex = page;
-                                    that.searchList();
-                                }
-                            });
-                        })
-                    },
                     load:function(token){
                         var that = this;
-                        window.app.token("/admin/task/index",{page : that.search.PageIndex,
-                            approved:'Finish',
-                            expired:0,},"GET",that.token,function(data){
-                                vm.$data.vmTableList = data;
-                                //格式化日期
-                                for(var i=0;i<vm.$data.vmTableList.DataSource.length;i++){
-                                    vm.$data.vmTableList.DataSource[i].last = window.moment.format(vm.$data.vmTableList.DataSource[i].last,"yyyy-MM-dd")
+                        $.ajax({
+                            url:"http://radar.3vcar.com/admin/task/index",
+                            dataType:"json",
+                            data:{
+                                page : that.search.PageIndex,
+                                approved:'Finish',
+                                expired:0,
+                            },
+                            type:'GET',
+                            beforeSend:function(xhr){
+                                xhr.setRequestHeader('Authorization',token);
+                            },
+                            success: function (data) {
+                                vm.$data.vmTableList = data.DataSource;
+                                for(var i=0;i<vm.$data.vmTableList.length;i++){
+                                    vm.$data.vmTableList[i].last = window.moment.format(vm.$data.vmTableList[i].last,"yyyy-MM-dd")
                                 }
-                                //分页
                                 var $pager = $('#pages');
                                 $pager.empty();
                                 $pager.removeData("twbs-pagination");
                                 $pager.unbind("page");
-
                                 $pager.twbsPagination({
                                     totalPages: data.TotalPages,
                                     visiblePages: data.TotalPages > 5 ? 5 : data.TotalPages,
@@ -225,33 +170,21 @@
                                         that.load();
                                     }
                                 });
-                            vm.$data.vmTableList = data;
-                            //格式化日期
-                            for(var i=0;i<vm.$data.vmTableList.DataSource.length;i++){
-                                vm.$data.vmTableList.DataSource[i].last = window.moment.format(vm.$data.vmTableList.DataSource[i].last,"yyyy-MM-dd")
                             }
-                            //分页
-                            var $pager = $('#pages');
-                            $pager.empty();
-                            $pager.removeData("twbs-pagination");
-                            $pager.unbind("page");
-
-                            $pager.twbsPagination({
-                                totalPages: data.TotalPages,
-                                visiblePages: data.TotalPages > 5 ? 5 : data.TotalPages,
-                                startPage: data.PageIndex,
-                                initiateStartPageClick: false,
-                                onPageClick: function (event, page) {
-                                    that.search.PageIndex = page;
-                                    that.load();
-                                }
-                            });
                         });
-                    }
+                    },
+                    searchList:function(){
+                        var arrStatus = [];
+                        for (var i = this.vmTableList.length - 1; i >= 0; i--) {
+                            if(this.vmTableList[i].name.indexOf(this.business)>=0){
+                                arrStatus.push(this.vmTableList[i]);
+                            }
+                        }
+                        vm.$data.vmTableList = arrStatus;
+                    },
                 }
             });
             vm.load(token);
         })
     </script>
-
 </html>

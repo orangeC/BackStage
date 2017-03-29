@@ -101,9 +101,19 @@
                 'Authorization':token
             },
             success:success
+        })
+    };
+    owner.tokentwo = function (url,data,type,beforeSend,success){
+        jQuery.ajax({
+            url:"http://radar.3vcar.com" + url,
+            data:data,
+            dataType:'json',
+            method:type,
+            timeout:10000,
+            beforeSend:beforeSend,
+            success:success,
         });
-    }
-
+    };
 
     // -------------------工具相关的--------------------------------------- 
     // 弹窗消息

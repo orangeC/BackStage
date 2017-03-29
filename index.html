@@ -6,18 +6,14 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/png" href="assets/img/favicon.ico">
-
-    <!--  CSS   -->
+    <link rel="icon" type="image/png" href="assets/img/logo.ico">
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
     <link href="assets/css/animate.min.css" rel="stylesheet"/>
     <link href="assets/css/light-bootstrap-dashboard.css" rel="stylesheet"/>
     <link href="assets/css/demo.css" rel="stylesheet" />
     <link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
-    
 </head>
 <body>
-
 <div class="wrapper">
     <div class="sidebar" data-color="blue" data-image="assets/img/sidebar-4.jpg">
     	<div class="sidebar-wrapper">
@@ -26,7 +22,6 @@
                     管理后台
                 </a>
             </div>
-
             <ul class="nav">
                 <li class="active">
                     <a href="index.html">
@@ -61,7 +56,6 @@
             </ul>
     	</div>
     </div>
-
     <div class="main-panel">
         <nav class="navbar navbar-default navbar-fixed">
             <div class="container-fluid">
@@ -69,31 +63,37 @@
                     <ul class="nav navbar-nav navbar-left" id="task">
                         <li>
                             <a href="approval.html" class="dropdown-toggle">
-                                <i>审核认证</i>
-                                <b class="caret"></b>
-                                <span class="notification">{{approval}}</span>
+                                <span>审核认证</span>
+                                <b></b>
+                                <span v-if="approval == 0"></span>
+                                <span class="notification" v-if="approval !== 0">{{approval}}</span>
                             </a>
                         </li>
                         <li class="dropdown">
                             <a href="warning.html" class="dropdown-toggle">
-                                <i>到期预警</i>
-                                <b class="caret"></b>
-                                <span class="notification">{{expired}}</span>
+                                <span>到期预警</span>
+                                <b></b>
+                                <span v-if="expired == 0"></span>
+                                <span class="notification" v-if="expired !== 0">{{expired}}</span>
                             </a>
                         </li>
                     </ul>
-
                     <ul class="nav navbar-nav navbar-right">
                         <li>
-                           <a href="">
-                               个人中心
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                个人中心
+                                <b class="caret"></b>
                             </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="editpassword.html">修改密码</a></li>
+                                <li class="divider"></li>
+                                <li><a href="login.html?clear=true">退出登录</a></li>
+                            </ul>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
-
         <div class="content">
             <div class="container-fluid">
                 <div class="row">
@@ -104,7 +104,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="col-md-7">
                         <div class="card">
                             <div class="content">
@@ -119,9 +118,10 @@
                                 <h4 class="title">任务</h4>
                                 <p class="category">平台需要处理的审核任务</p>
                             </div>
-                            <div class="content">
-                                <div class="table-full-width">
-                                    <table class="table" id="vmtask">
+                            <div class="content" id="vmtask">
+                                <div v-if="show==0"><hr>暂无需要处理的任务</div>
+                                <div class="table-full-width" v-if="show==1">
+                                    <table class="table">
                                         <tbody v-for="task in tasks">
                                             <td v-if="task.type == 'Modify'"><a v-bind:href="'./details.html?code='+task.code">【店铺信息修改】{{task.name}}</a></td>
                                             <td v-if="task.type == 'Apply'"><a v-bind:href="'./details.html?code='+task.code">【新店申请】{{task.name}}</a></td>
@@ -136,13 +136,6 @@
                                         </tbody>
                                     </table>
                                 </div>
-
-                                <div class="footer">
-                                    <hr>
-                                    <div class="stats">
-                                        <i class="fa fa-history"></i> Updated 3 minutes ago
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -152,7 +145,6 @@
     </div>
 </div>
 </body>
-    <!--   Core JS Files   -->
     <script src="assets/js/jquery-3.1.1.min.js" type="text/javascript"></script>
     <script src="assets/js/vue-2.1.10.min.js" type="text/javascript"></script>
     <script src="assets/js/jquery.twbsPagination.min.js" type="text/javascript"></script>
@@ -321,6 +313,11 @@
                 }
             }
             app.$data.tasks = tasks;
+            if (tasks.length==0) {
+                app.$data.show=0
+            }else{
+                app.$data.show=1
+            }
         });
         var vm = new Vue({
             el:'#task',
@@ -333,11 +330,10 @@
         var app = new Vue({
             el:'#vmtask',
             data:{
-                tasks:[]
+                tasks:[],
+                show:''
             }
         })   
     })
-
 	</script>
-
 </html>
