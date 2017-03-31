@@ -78,20 +78,19 @@
                                     </div><div class="typo-line">
                                         <p class="category">服务范围</p>
                                         <p class="text-muted">
-                                        天津-滨海新区
+                                        {{item.scope}}
                                         </p>
                                     </div>
                                     <div class="typo-line">
                                         <p class="category">服务介绍</p>
-                                        <p class="text-muted">
-                                        {{item.description}}
+                                        <p v-html="item.description"  class="text-muted">
                                         </p>
                                     </div>
                                     <div class="typo-line" id="calendarInput">
                                         <p class="category">有效日期</p>
                                         <p class="text-muted">
                                         {{item.last}}&nbsp;&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;&nbsp;
-                                		<input class="calendar" :data-default-date="item.expired" :data-min-date="item.last" data-max-date="2020-01-01" v-model="item.expired">   
+                                		<input class="calendar" :data-default-date="item.expired" :data-min-date="item.last" :data-max-date="expiredTime" v-model="item.expired">   
                                         </p>
                                     </div>
                                     <div class="typo-line">
@@ -183,7 +182,8 @@
                 radio:false,
                 picked:"",
                 number: 1,
-                author:""
+                author:"",
+                expiredTime:""
               },
                 methods: {
                         onSubmit:function(e){
@@ -223,6 +223,11 @@
                             that.token = token;
                             window.app.token("/admin/shop/view",{code: dataCode},"GET",token,function(res){
                                 that.items.push(res);
+                                //转化3年后时间
+                                var time = that.items[0].last;
+                                var time2 = Date.parse(new Date(time))+94608000000;
+                                that.expiredTime = window.moment.format(time2,"yyyy-MM-dd");
+                                //
                                 that.items[0].expired = window.moment.format(that.items[0].expired,"yyyy-MM-dd");
                                 that.items[0].last = window.moment.format(that.items[0].last,"yyyy年MM月dd日");
                                 //根据状态设置通过复选框
@@ -238,6 +243,7 @@
                                   "None": "无"
                                 }
                                 that.author = thatStatus[that.items[0].status];
+                                that.items[0].description=that.items[0].description.replace(/\n/g,"<br/>");
                                 that.$nextTick(function () {
                                     $(".calendar").flatpickr();  
                                 });
